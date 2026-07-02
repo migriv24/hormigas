@@ -7,3 +7,8 @@ sqlalchemy>=2.0.0
 psycopg2-binary>=2.9.0
 pymupdf>=1.24.0
 Pillow>=10.0.0
+
+# Void Core engine (the CLI / dispatcher spine). Not on PyPI — installed editable
+# from the sibling repo. The app runs without it (the Void Console degrades
+# gracefully), so this is optional for a plain checkout:
+#   pip install -e ../VoidCore

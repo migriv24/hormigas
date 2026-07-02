@@ -374,3 +374,109 @@ window.devCopyLogs = async function() {
   `;
   document.head.appendChild(s);
 })();
+
+// ── Void Console — the Void Core dispatcher REPL ──────────────────────────────
+// Same engine + state as `python -m hormiga_core.cli`: the UI and the terminal
+// are two callers of one dispatcher (UI ⇄ CLI parity by construction).
+
+const _voidHistory = [];
+let   _voidHistPos = -1;
+let   _voidBooted  = false;
+
+function _voidEsc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function _voidAppend(html) {
+  const out = document.getElementById('void-output');
+  if (!out) return;
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  out.appendChild(div);
+  out.scrollTop = out.scrollHeight;
+}
+
+function voidClear() {
+  const out = document.getElementById('void-output');
+  if (out) out.innerHTML = '';
+}
+
+async function _voidDispatch(command, { echo = true } = {}) {
+  if (echo) {
+    _voidAppend(`<span style="color:var(--accent);font-weight:700;">hormiga&gt;</span> ${_voidEsc(command)}`);
+  }
+  let res;
+  try {
+    const r = await fetch('/api/dev/cli', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command }),
+    });
+    res = await r.json();
+  } catch (err) {
+    _voidAppend(`<span style="color:#dc2626;">network error: ${_voidEsc(err.message)}</span>`);
+    return null;
+  }
+  const color = res.ok ? 'var(--text)' : '#dc2626';
+  const lines = res.lines || [];
+  if (lines.length) {
+    _voidAppend(`<span style="color:${color};">${lines.map(_voidEsc).join('\n')}</span>`);
+  } else if (res.data !== null && res.data !== undefined) {
+    _voidAppend(`<span style="color:${color};">${_voidEsc(JSON.stringify(res.data, null, 2))}</span>`);
+  } else if (!res.ok) {
+    _voidAppend(`<span style="color:${color};">(failed)</span>`);
+  }
+  return res;
+}
+
+async function _voidUpdateWhere() {
+  try {
+    const r = await fetch('/api/dev/cli', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command: 'where' }),
+    });
+    const res = await r.json();
+    const el = document.getElementById('void-where');
+    if (el && res.ok && res.lines) el.textContent = '· ' + res.lines.join(' · ');
+  } catch { /* server not up yet — banner stays plain */ }
+}
+
+async function _voidBoot() {
+  if (_voidBooted) return;
+  _voidBooted = true;
+  _voidAppend('<span style="color:var(--text-muted);">Void Console — every command here is a Void Core ' +
+              'dispatcher verb over the newsletter mantle (blocks = runes) and the data holidays ' +
+              '(contacts, events, images, jobs). Type <b>help</b> for the verb catalog.</span>');
+  await _voidUpdateWhere();
+}
+
+document.addEventListener('keydown', (ev) => {
+  const input = document.getElementById('void-input');
+  if (!input || document.activeElement !== input) return;
+  if (ev.key === 'Enter') {
+    const command = input.value.trim();
+    if (!command) return;
+    input.value = '';
+    _voidHistory.push(command);
+    _voidHistPos = _voidHistory.length;
+    _voidDispatch(command).then((res) => {
+      if (res && res.ok && /^(use|mantle)\b/.test(command)) _voidUpdateWhere();
+    });
+  } else if (ev.key === 'ArrowUp') {
+    if (_voidHistPos > 0) { _voidHistPos--; input.value = _voidHistory[_voidHistPos]; }
+    ev.preventDefault();
+  } else if (ev.key === 'ArrowDown') {
+    if (_voidHistPos < _voidHistory.length - 1) { _voidHistPos++; input.value = _voidHistory[_voidHistPos]; }
+    else { _voidHistPos = _voidHistory.length; input.value = ''; }
+    ev.preventDefault();
+  }
+});
+
+EventBus.on('tab:changed', ({ tab }) => {
+  if (tab === 'developer') {
+    _voidBoot();
+    const input = document.getElementById('void-input');
+    if (input) setTimeout(() => input.focus(), 50);
+  }
+});

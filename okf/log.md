@@ -3,6 +3,18 @@
 Dated history of the project and this bundle. Newest first. The forward-looking
 counterpart is [roadmap.md](/roadmap.md).
 
+## 2026-07-02 — Void Core Phase 1: the dispatcher spine
+- `hormiga_core/` added: the Void Core adapter. `engine.py` (single manager +
+  Dispatcher seam + state persistence), `glyphs.py` (14 section glyphs),
+  `holidays.py` (contacts/events/images/jobs as data holidays), `effects.py`
+  (the effect-handler boundary), `tagexpr.py` (host-side SPEC §5 evaluator),
+  `cli.py` (the `hormiga` terminal).
+- **Void Console** added to the [Developer tab](/ui-ux/developer-tab.md): a live
+  Void Core REPL over `POST /api/dev/cli` — same engine/state as the terminal CLI.
+- Verified end-to-end: rune/mantle CRUD, tag filtering, undo/redo, `effect query`
+  over live data (contacts 69, events 30, images 65, jobs 8), Voidscript, and
+  save through the effect handler. See [the CLI](/concepts/cli.md).
+
 ## 2026-07-01 — Fresh public history + this bundle
 - Repo rebooted with a clean single-commit history for open-sourcing (MIT). The
   private development history (2025–2026, v0.1.0 → v1.4.15) is archived privately;

@@ -2,9 +2,16 @@
 type: Concept
 title: Void Core Convergence
 description: Hormiga's foundation is being rebuilt on Void Core — hormiga_core embeds the C engine, entities/blocks become runes, the newsletter a mantle, Antfarm nodes holidays.
-tags: [status:planned, audience:dev, confidence:asserted, foundation]
-timestamp: 2026-07-01T00:00:00Z
+resource: hormiga_core/engine.py
+tags: [status:current, audience:dev, confidence:verified, foundation]
+timestamp: 2026-07-02T00:00:00Z
 ---
+
+> **Phase 1 landed (2026-07-02):** `hormiga_core` embeds the Void Core C engine
+> via its Python binding + the `Dispatcher` seam. `engine.py` holds the single
+> manager (glyphs registered, holiday registry wired, effect handler bound onto
+> Hormiga's [logger](/ui-ux/developer-tab.md), state in `data/void_state.json`).
+> The [CLI](/concepts/cli.md) drives it. Remaining phases below.
 
 The decided architectural direction (plan: the
 [integration reference](/references/voidcore-integration-doc.md)): a

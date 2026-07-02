@@ -73,4 +73,27 @@
 
   </div>
 
+  <!-- Void Console — the Void Core dispatcher REPL (rune · mantle · holiday) -->
+  <div id="void-console" style="height:38%;min-height:180px;display:flex;flex-direction:column;
+                                 border-top:2px solid var(--accent);flex-shrink:0;">
+    <div style="padding:8px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;
+                color:var(--accent);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+      <span>VOID CONSOLE <span id="void-where" style="font-weight:400;color:var(--text-muted);"></span></span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-weight:400;color:var(--text-muted);">try: help · describe · ls --tag &lt;expr&gt; · effect holidays</span>
+        <button class="btn btn-ghost btn-sm" onclick="voidClear()" style="font-size:11px;">Clear</button>
+      </div>
+    </div>
+    <div id="void-output" style="flex:1;overflow-y:auto;font-family:monospace;font-size:12px;
+                                  padding:8px 16px;white-space:pre-wrap;"></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 16px;
+                border-top:1px solid var(--border);flex-shrink:0;">
+      <span style="font-family:monospace;font-size:12px;color:var(--accent);font-weight:700;">hormiga&gt;</span>
+      <input id="void-input" type="text" spellcheck="false" autocomplete="off"
+             placeholder="Void Core command…  (↑/↓ history, Enter to run)"
+             style="flex:1;font-family:monospace;font-size:12px;border:none;outline:none;
+                    background:transparent;color:var(--text);">
+    </div>
+  </div>
+
 </div>

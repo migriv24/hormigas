@@ -34,8 +34,8 @@ to the code that backs it. Validated with Void Core's OKF engine
 * [The .miga File](/concepts/miga-file.md) - the encrypted unit of deployment
 * [Connections Graph](/concepts/connections-graph.md) - the org's relationships, visualized; future Antfarm editor home
 * [The Antfarm](/concepts/antfarm.md) - protocol-node backend topology — planned
-* [Void Core Convergence](/concepts/voidcore-convergence.md) - the foundation rebuild — planned
-* [The CLI](/concepts/cli.md) - the agent/human terminal surface, UI-equal by construction — planned
+* [Void Core Convergence](/concepts/voidcore-convergence.md) - the foundation rebuild — Phase 1 landed
+* [The CLI](/concepts/cli.md) - the agent/human terminal surface, UI-equal by construction — current
 * [Offline-First](/concepts/offline-first.md) - usable without internet — planned
 
 # UI / UX — the user surface (first-class here)

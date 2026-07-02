@@ -23,6 +23,7 @@ data/tags.json
 data/projects/*.json
 data/templates/*.json
 data/resources.json
+data/void_state.json
 
 # Backups (may contain full DB dumps with image delete-URLs)
 backups/

@@ -1658,6 +1658,18 @@ def api_dev_logs_clear():
     return _ok({"cleared": True})
 
 
+@app.route("/api/dev/cli", methods=["POST"])
+@_handle
+def api_dev_cli():
+    """The Void Core console: one dispatcher command in, SPEC §6 {ok, lines,
+    data} out. Same engine and state the terminal CLI uses."""
+    from hormiga_core import get_engine
+    command = (request.get_json(force=True).get("command") or "").strip()
+    if not command:
+        return _err("empty command")
+    return jsonify(get_engine(get_repo).dispatch(command))
+
+
 @app.route("/api/<path:_>", methods=["OPTIONS"])
 def _cors_preflight(_):
     """Handle CORS preflight requests from mobile clients."""

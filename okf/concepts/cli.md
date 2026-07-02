@@ -2,9 +2,18 @@
 type: Concept
 title: The CLI
 description: The hormiga command — the agent/human terminal surface where every UI action is possible and every CLI action has a UI equivalent, by construction (both call one dispatcher).
-tags: [status:planned, audience:dev, audience:user, confidence:asserted, foundation]
-timestamp: 2026-07-01T00:00:00Z
+resource: hormiga_core/cli.py
+tags: [status:current, audience:dev, audience:user, confidence:verified, foundation]
+timestamp: 2026-07-02T00:00:00Z
 ---
+
+> **Built (2026-07-02, Phase 1 slice):** the dispatcher spine is live. Two callers
+> exist today — the **Void Console** in the [Developer tab](/ui-ux/developer-tab.md)
+> (`POST /api/dev/cli`) and the terminal (`python -m hormiga_core.cli`) — both over
+> the same [engine](/concepts/voidcore-convergence.md), state file, and holidays.
+> Read verbs, rune/mantle mutation, tagging, undo/redo, `effect query <holiday>`,
+> and Voidscript all work. Remaining: newsletter render/save glyphs (Phase 3),
+> full UI-action → verb conversion (Phase 4), packaged-build bundling.
 
 The founding requirement of the whole [convergence](/concepts/voidcore-convergence.md):
 **an AI agent should interact with Hormiga the way a human uses the UI** — all UI

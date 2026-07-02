@@ -20,6 +20,7 @@ a = Analysis(
         ('data',                  'data'),
         ('schemas',               'schemas'),
         ('services',              'services'),
+        ('hormiga_core',          'hormiga_core'),
     ],
     hiddenimports=[
         # SQLAlchemy PostgreSQL dialect
@@ -50,7 +51,19 @@ a = Analysis(
         'urllib3',
         'certifi',
         'charset_normalizer',
+        # Void Core adapter (imported lazily inside the /api/dev/cli route)
+        'hormiga_core',
+        'hormiga_core.engine',
     ],
+    # NOTE (Void Core packaging — remaining Phase-1 step): the `voidcore` package
+    # is currently an editable install pointing at ../VoidCore and loads its
+    # binding/holidays by absolute path, plus it needs libvoidcore.dll at runtime.
+    # In a frozen build without it, the engine degrades gracefully (the Void
+    # Console reports "engine unavailable — pip install -e ../VoidCore"). To make
+    # the console work in packaged builds, vendor VoidCore's runtime files
+    # (voidcore/, bindings/, holidays/, scry/, temper/, reduce/) + the built
+    # libvoidcore.dll into this bundle preserving that layout, then verify against
+    # the frozen exe. Tracked in VOIDCORE_INTEGRATION.md §4 Phase 1.
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

@@ -14,7 +14,7 @@
 - AES-256-GCM encrypted `.miga` credential bundles for sharing database access
 - Native app menu (File: New Database / Open Database / Save Database As)
 - Landing page with recent databases list
-- Auto-updater via `migriv24/hormiga-releases` (GitHub)
+- Auto-updater via GitHub Releases on `migriv24/hormigas` (formerly the separate `hormiga-releases` repo)
 - Three-tier storage model: Shared (Supabase) · Public (Google Sheets) · Local (device prefs)
 
 ---

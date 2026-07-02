@@ -49,7 +49,7 @@
     "publish": {
       "provider": "github",
       "owner": "migriv24",
-      "repo": "hormiga-releases"
+      "repo": "hormigas"
     },
     "win": {
       "target": [

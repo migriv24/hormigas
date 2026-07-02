@@ -194,7 +194,7 @@ hormiga/
 
 ## Release Process
 
-Releases are version-tag driven. The CI (`.github/workflows/release.yml`) builds Python binaries + Electron installers for Windows, macOS, and Linux, then publishes to `migriv24/hormiga-releases`.
+Releases are version-tag driven. The CI (`.github/workflows/release.yml`) builds Python binaries + Electron installers for Windows, macOS, and Linux, then publishes them as GitHub Releases on this repo (`migriv24/hormigas`). The auto-updater feeds from the same releases.
 
 ```bash
 # Bump patch version (1.4.10 → 1.4.11), tag, and push — CI does the rest

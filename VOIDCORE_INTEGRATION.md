@@ -69,8 +69,9 @@ gets built anyway):
 4. **License: MIT**, matching Void Core (already MIT on GitHub) — free, permissive,
    OSI-approved, zero friction between the two repos. (If copyleft ever matters,
    that's a deliberate later conversation; default is consistency.)
-5. Release infra carries over: `hormiga-releases` already exists as a separate
-   repo; electron-updater works the same from a public source repo.
+5. Release infra simplifies: the public repo (`migriv24/hormigas`) hosts its own
+   GitHub Releases — no separate releases repo, and CI publishes with the
+   built-in `GITHUB_TOKEN` instead of a PAT.
 
 Working rule from here on: **the repo root is a public artifact.** Newsletter
 exports, member spreadsheets, meeting materials live outside the repo (or in an

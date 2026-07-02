@@ -1,0 +1,65 @@
+<tr>
+  <td style="background:#ffffff;border-radius:16px;padding:0;
+             box-shadow:0 8px 24px rgba(17,24,39,0.08);font-family:Arial,Helvetica,sans-serif;overflow:hidden;">
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tbody>
+        <!-- Header band -->
+        <tr>
+          <td style="background:#0b2a4a;padding:16px 18px;">
+            <div style="font-size:18px;font-weight:800;color:#ffffff;line-height:1.2;">
+              {{ title | default("Upcoming Network Meetings") }}
+            </div>
+            {% if subtitle %}
+            <div style="font-size:13px;color:#dbeafe;line-height:1.4;margin-top:4px;">{{ subtitle }}</div>
+            {% endif %}
+          </td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td style="padding:16px 18px 18px 18px;">
+
+            {% if zoom_url %}
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                   style="margin-bottom:12px;">
+              <tbody><tr>
+                <td style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px;">
+                  <div style="font-size:13px;font-weight:700;color:#1d4ed8;">Join link</div>
+                  <div style="font-size:13px;line-height:1.6;color:#1e3a8a;margin-top:4px;">
+                    <a href="{{ zoom_url }}" style="color:#1d4ed8;text-decoration:underline;">{{ zoom_url }}</a>
+                  </div>
+                </td>
+              </tr></tbody>
+            </table>
+            {% endif %}
+
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                   style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;border-collapse:separate;">
+              {% for m in meetings %}
+              <tr>
+                <td style="padding:12px;background:{% if loop.index is odd %}#f9fafb{% else %}#ffffff{% endif %};
+                           {% if not loop.last %}border-bottom:1px solid #e5e7eb;{% endif %}
+                           font-size:14px;font-weight:700;color:#111827;width:50%;">
+                  {{ m.format }}
+                </td>
+                <td style="padding:12px;background:{% if loop.index is odd %}#f9fafb{% else %}#ffffff{% endif %};
+                           {% if not loop.last %}border-bottom:1px solid #e5e7eb;{% endif %}
+                           font-size:14px;color:#374151;">
+                  {{ m.date }}
+                </td>
+              </tr>
+              {% endfor %}
+            </table>
+
+            {% if note %}
+            <div style="font-size:12px;line-height:1.5;color:#6b7280;margin-top:10px;">{{ note }}</div>
+            {% endif %}
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </td>
+</tr>

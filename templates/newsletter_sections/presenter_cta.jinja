@@ -1,0 +1,26 @@
+<tr>
+  <td style="background:#ffffff;border-radius:16px;padding:18px 20px;
+             box-shadow:0 8px 24px rgba(17,24,39,0.08);font-family:Arial,Helvetica,sans-serif;">
+    <div style="font-size:16px;font-weight:700;">Present at an Upcoming Meeting</div>
+    <div style="font-size:14px;line-height:1.6;color:#374151;margin-top:8px;">
+      We invite network members to share brief presentations about programs, tools,
+      resources, or lessons learned that may benefit the group.
+      Presentations are usually <strong>5–10 minutes plus questions</strong>.
+    </div>
+    <div style="margin-top:16px;">
+      <a href="{{ signup_url }}"
+         style="display:inline-block;background:#ea580c;color:#ffffff;text-decoration:none;
+                font-size:14px;font-weight:700;padding:12px 16px;border-radius:12px;">
+        Sign Up to Present
+      </a>
+    </div>
+    {% if contacts %}
+    <div style="font-size:14px;line-height:1.6;color:#374151;margin-top:10px;">
+      Prefer email? Reach out to
+      {% for c in contacts %}
+        <a href="mailto:{{ c.email }}" style="color:#ea580c;text-decoration:none;font-weight:700;">{{ c.name }}</a>{% if not loop.last %} or {% endif %}
+      {% endfor %}.
+    </div>
+    {% endif %}
+  </td>
+</tr>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hormiga</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 420px;
+      height: 280px;
+      background: #f5f4f3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #14110F;
+      overflow: hidden;
+      user-select: none;
+      -webkit-app-region: drag;
+    }
+
+    .icon {
+      width: 72px;
+      height: 72px;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.1s forwards;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.25s forwards;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #9a8f8b;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.35s forwards;
+    }
+
+    /* Minecraft-style fun message */
+    .fun-message {
+      font-size: 11px;
+      font-style: italic;
+      color: #A4031F;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 22px;
+      min-height: 14px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.45s forwards;
+      text-align: center;
+      max-width: 320px;
+    }
+
+    .bar-track {
+      width: 200px;
+      height: 3px;
+      background: #dedad8;
+      border-radius: 2px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.55s forwards;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: #A4031F;
+      border-radius: 2px;
+      width: 40%;
+      transform: translateX(-250%);
+      transition: width 0.3s ease;
+    }
+
+    /* Indeterminate animation — swapped out when downloading */
+    .bar-fill.indeterminate {
+      width: 40%;
+      animation: slide 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes slide {
+      0%   { transform: translateX(-250%); }
+      100% { transform: translateX(600%); }
+    }
+
+    /* Update status line */
+    .status {
+      margin-top: 10px;
+      font-size: 10px;
+      color: #b0a9a6;
+      letter-spacing: 0.05em;
+      min-height: 13px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.6s forwards;
+      transition: color 0.3s ease;
+    }
+
+    .status.good { color: #6a9e6a; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .version {
+      position: absolute;
+      bottom: 14px;
+      right: 18px;
+      font-size: 10px;
+      color: #b0a9a6;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <img class="icon" src="../assets/icons/icon.png" alt="Hormiga">
+  <div class="title">Hormiga</div>
+  <div class="subtitle">by LON</div>
+  <div class="fun-message" id="funMessage"></div>
+  <div class="bar-track">
+    <div class="bar-fill indeterminate" id="barFill"></div>
+  </div>
+  <div class="status" id="status"></div>
+  <div class="version" id="versionLabel">v—</div>
+
+  <script>
+    const funMessage   = document.getElementById('funMessage')
+    const barFill      = document.getElementById('barFill')
+    const status       = document.getElementById('status')
+    const versionLabel = document.getElementById('versionLabel')
+
+    if (window.splash) {
+      if (window.splash.appVersion) {
+        versionLabel.textContent = `v${window.splash.appVersion}`
+      }
+      window.splash.onMessage((msg) => {
+        funMessage.textContent = `"${msg}"`
+      })
+
+      window.splash.onUpdateStatus((data) => {
+        status.classList.remove('good')
+
+        switch (data.status) {
+          case 'checking':
+            status.textContent = 'Checking for updates...'
+            break
+
+          case 'up-to-date':
+            status.textContent = 'Already up to date'
+            status.classList.add('good')
+            break
+
+          case 'downloading':
+            if (data.percent > 0) {
+              // Switch to determinate progress bar
+              barFill.classList.remove('indeterminate')
+              barFill.style.transform = 'none'
+              barFill.style.width = data.percent + '%'
+              status.textContent = `Downloading update... ${data.percent}%`
+            } else {
+              status.textContent = data.version
+                ? `Downloading v${data.version}...`
+                : 'Downloading update...'
+            }
+            break
+
+          case 'installing':
+            barFill.classList.remove('indeterminate')
+            barFill.style.transform = 'none'
+            barFill.style.width = '100%'
+            status.textContent = 'Installing update — restarting...'
+            break
+        }
+      })
+    }
+  </script>
+</body>
+</html>

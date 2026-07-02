@@ -1,0 +1,98 @@
+<div class="newsletter-tab">
+
+  <!-- Project bar -->
+  <div class="project-bar">
+    <span style="font-weight:600;color:var(--text-muted);flex-shrink:0;">Project:</span>
+    <input type="text" id="projectName" class="project-name-input" placeholder="Untitled Newsletter" value="Untitled Newsletter">
+    <button class="btn btn-sm btn-outline" id="projectSaveBtn" data-tooltip="Save project to disk">💾 Save</button>
+    <button class="btn btn-sm btn-ghost" id="projectOpenBtn" data-tooltip="Open a saved project">📂 Open</button>
+    <button class="btn btn-sm btn-ghost" id="projectNewBtn" data-tooltip="Start a blank newsletter">＋ New</button>
+    <span class="project-bar-sep">|</span>
+    <button class="btn btn-sm btn-ghost" id="templatePickBtn" data-tooltip="Load from a saved template">🗂 From Template</button>
+    <button class="btn btn-sm btn-ghost" id="importFileBtn" data-tooltip="Import newsletter from a .json file on disk">📁 From File</button>
+    <button class="btn btn-sm btn-ghost" id="exportFileBtn" data-tooltip="Export this newsletter to a .json file">📤 Export File</button>
+    <span id="projectSavedIndicator" style="font-size:11px;color:var(--text-muted);margin-left:4px;"></span>
+  </div>
+
+  <!-- Top bar -->
+  <div class="builder-topbar">
+    <div class="builder-meta">
+      <input type="text" id="nlMonth" class="meta-input" placeholder="Month (e.g. April 2026)">
+      <input type="text" id="nlSubtitle" class="meta-input" placeholder="Subtitle (optional)">
+      <!-- Language tab switcher — controls which canvas is being edited -->
+      <div class="lang-tabs" id="nlLangTabs" data-tooltip="Switch between language canvases">
+        <button class="lang-tab lang-tab--active" id="nlLangEn" onclick="switchBuilderLang('en')">EN</button>
+        <button class="lang-tab" id="nlLangEs" onclick="switchBuilderLang('es')">ES</button>
+      </div>
+      <!-- Hidden input keeps backward-compat for any JS that reads nlLang.value -->
+      <input type="hidden" id="nlLang" value="en">
+      <button class="btn btn-sm btn-ghost" id="nlTranslateBtn"
+              data-tooltip="Translate this canvas to the other language (creates an editable copy)">⟷ Translate</button>
+    </div>
+    <div class="builder-actions">
+      <button class="btn btn-sm btn-ghost" id="paletteToggleBtn" data-tooltip="Toggle section palette">☰</button>
+      <button class="btn btn-sm btn-ghost" id="editorToggleBtn" data-tooltip="Toggle section editor">⚙</button>
+      <button class="btn btn-outline" id="nlRenderBtn" data-tooltip="Build the newsletter HTML and cache it">⚙ Render</button>
+      <button class="btn btn-ghost" id="nlPreviewBtn" data-tooltip="Open the last render in a preview — instant" disabled>👁 Preview Latest</button>
+      <button class="btn btn-primary" id="nlExportBtn" data-tooltip="Download rendered HTML files (renders both languages if not already cached)" disabled>⬇ Download</button>
+    </div>
+  </div>
+
+  <!-- Structural diff warning — shown when EN and ES canvases have different section structures -->
+  <div id="nlStructDiffWarning" class="struct-diff-banner hidden">
+    ⚠ <span id="nlStructDiffMsg"></span>
+    <a href="#" style="margin-left:auto;font-size:12px;color:#92400e;" onclick="event.preventDefault();document.getElementById('nlStructDiffWarning').classList.add('hidden')">Dismiss</a>
+  </div>
+
+  <div class="builder-workspace">
+
+    <!-- Section palette (left) -->
+    <div class="section-palette">
+      <div class="palette-title">Sections</div>
+      <div class="palette-hint">Drag onto canvas →</div>
+      <div class="palette-list" id="sectionPalette">
+        <!-- Populated by builder.js -->
+      </div>
+    </div>
+
+    <!-- Canvas (center) -->
+    <div class="builder-canvas-wrap">
+      <div class="canvas-label">Newsletter Canvas</div>
+      <div id="builderCanvas" class="builder-canvas">
+        <div class="canvas-empty-hint" id="canvasHint">
+          Drag sections here to build your newsletter
+        </div>
+      </div>
+    </div>
+
+    <!-- Section editor (right) -->
+    <div class="section-editor" id="sectionEditor">
+      <div class="editor-placeholder">
+        Select a section on the canvas to edit it
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+<!-- Full preview modal -->
+<div id="previewModal" class="modal-overlay hidden">
+  <div class="modal-box modal-wide">
+    <div class="modal-header">
+      <h2>Newsletter Preview</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div id="previewLangToggle" style="display:none;gap:4px;">
+          <button class="btn btn-sm btn-outline" id="previewLangEn" onclick="switchPreviewLang('en')">EN</button>
+          <button class="btn btn-sm btn-ghost"   id="previewLangEs" onclick="switchPreviewLang('es')">ES</button>
+        </div>
+        <button class="btn btn-sm btn-outline" id="previewCopyBtn">Copy HTML</button>
+        <button class="modal-close" id="previewClose">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <iframe id="previewFrame" style="width:100%;height:70vh;border:0;"></iframe>
+    </div>
+  </div>
+</div>

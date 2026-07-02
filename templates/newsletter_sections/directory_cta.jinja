@@ -1,0 +1,23 @@
+<tr>
+  <td style="background:#ffffff;border-radius:16px;padding:18px 20px;
+             box-shadow:0 8px 24px rgba(17,24,39,0.08);font-family:Arial,Helvetica,sans-serif;">
+    <div style="font-size:16px;font-weight:700;">Network directory</div>
+    <div style="font-size:14px;line-height:1.6;color:#374151;margin-top:8px;">
+      {{ text | default("Please update your information in this spreadsheet. It is used to find collaborators, make referrals, share hiring needs, and connect people quickly when families need support.") }}
+    </div>
+    <ul style="margin:10px 0 0 18px;font-size:14px;line-height:1.6;color:#374151;">
+      <li>Please make sure your contact information is current and accurate.</li>
+      <li>Use the notes column to briefly describe who your organization serves.</li>
+      <li>If you would like to remain part of the network but no longer receive these newsletters,
+          change <strong>"Receive Newsletter"</strong> next to your name to <strong>FALSE</strong>.</li>
+      <li>You can update your entry at any time.</li>
+    </ul>
+    <div style="margin-top:14px;">
+      <a href="{{ url }}"
+         style="display:inline-block;background:#0f766e;color:#ffffff;text-decoration:none;
+                font-size:14px;font-weight:700;padding:12px 16px;border-radius:12px;">
+        {{ btn_label | default("Open Network Directory") }}
+      </a>
+    </div>
+  </td>
+</tr>

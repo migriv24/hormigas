@@ -1,0 +1,159 @@
+<tr>
+  <td style="background:#ffffff;border-radius:16px;padding:18px 20px;
+             box-shadow:0 8px 24px rgba(17,24,39,0.08);font-family:Arial,Helvetica,sans-serif;">
+
+    <div style="font-size:16px;font-weight:700;">
+      {{ title | default("Job Opportunities") }}
+    </div>
+    {% if subtitle %}
+    <div style="font-size:14px;line-height:1.6;color:#374151;margin-top:8px;">{{ subtitle }}</div>
+    {% endif %}
+
+    {# Resolve display flags with safe defaults #}
+    {% set _show_pay        = show_pay        if show_pay        is defined else true %}
+    {% set _show_close_date = show_close_date if show_close_date is defined else true %}
+    {% set _show_contact    = show_contact    if show_contact    is defined else true %}
+
+    {# Availability badge colors #}
+    {% macro avail_badge(avail) %}
+      {% if avail == "closing-soon" %}
+        <span style="display:inline-block;background:#fef3c7;color:#92400e;font-size:11px;font-weight:700;
+                     padding:2px 8px;border-radius:99px;border:1px solid #f59e0b;">Closing Soon</span>
+      {% elif avail == "closed" %}
+        <span style="display:inline-block;background:#fee2e2;color:#991b1b;font-size:11px;font-weight:700;
+                     padding:2px 8px;border-radius:99px;border:1px solid #fca5a5;">Closed</span>
+      {% else %}
+        <span style="display:inline-block;background:#dcfce7;color:#166534;font-size:11px;font-weight:700;
+                     padding:2px 8px;border-radius:99px;border:1px solid #86efac;">Open</span>
+      {% endif %}
+    {% endmacro %}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;">
+      <tbody>
+        {% set ns = namespace(col=0) %}
+        {% for job in jobs %}
+          {% if ns.col == 0 %}<tr>{% endif %}
+
+          <td width="50%" valign="top" style="padding:6px;">
+            <table width="100%" cellpadding="0" cellspacing="0"
+                   style="border:1px solid #e5e7eb;border-radius:12px;height:100%;">
+              <tbody><tr>
+                <td style="padding:14px;vertical-align:top;">
+
+                  {# Icon + availability badge row #}
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                      <td>
+                        {% if job.icon_url %}
+                          {% if job.icon_url | length <= 4 %}
+                            {# Emoji icon #}
+                            <span style="font-size:28px;line-height:1;">{{ job.icon_url }}</span>
+                          {% else %}
+                            <img src="{{ job.icon_url }}" alt="" style="width:36px;height:36px;border-radius:8px;object-fit:cover;display:block;">
+                          {% endif %}
+                        {% else %}
+                          <span style="font-size:28px;line-height:1;">💼</span>
+                        {% endif %}
+                      </td>
+                      <td style="text-align:right;vertical-align:top;">
+                        {{ avail_badge(job.availability) }}
+                      </td>
+                    </tr></tbody>
+                  </table>
+
+                  {# Title + org #}
+                  <div style="font-size:14px;font-weight:700;margin-top:10px;color:#111827;">
+                    {{ job.title }}
+                  </div>
+                  {% if job.org %}
+                  <div style="font-size:13px;color:#4b5563;margin-top:2px;">{{ job.org }}</div>
+                  {% endif %}
+
+                  {# Job type pill #}
+                  {% if job.job_type %}
+                  <div style="margin-top:8px;">
+                    <span style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:600;
+                                 padding:2px 8px;border-radius:99px;text-transform:capitalize;">
+                      {{ job.job_type | replace("-", " ") }}
+                    </span>
+                  </div>
+                  {% endif %}
+
+                  {# Pay #}
+                  {% if _show_pay and job.pay %}
+                  <div style="font-size:13px;color:#374151;margin-top:8px;font-weight:600;">
+                    💰 {{ job.pay }}
+                  </div>
+                  {% endif %}
+
+                  {# Location #}
+                  {% if job.location %}
+                  <div style="font-size:13px;color:#374151;margin-top:4px;">
+                    📍 {{ job.location }}
+                  </div>
+                  {% endif %}
+
+                  {# Close date #}
+                  {% if _show_close_date and job.close_date %}
+                  <div style="font-size:12px;color:#6b7280;margin-top:4px;">
+                    Deadline: {{ job.close_date }}
+                  </div>
+                  {% endif %}
+
+                  {# Description (first 200 chars) #}
+                  {% if job.description %}
+                  <div style="font-size:12px;color:#6b7280;margin-top:8px;line-height:1.5;">
+                    {{ job.description[:200] }}{% if job.description | length > 200 %}…{% endif %}
+                  </div>
+                  {% endif %}
+
+                  {# Contact #}
+                  {% if _show_contact and job.contact_name %}
+                  <div style="font-size:12px;color:#374151;margin-top:10px;border-top:1px solid #f3f4f6;padding-top:8px;">
+                    Contact: <strong>{{ job.contact_name }}</strong>
+                    {% if job.contact_email %}
+                    · <a href="mailto:{{ job.contact_email }}" style="color:#2563eb;text-decoration:none;">{{ job.contact_email }}</a>
+                    {% endif %}
+                    {% if job.contact_phone %}
+                    · {{ job.contact_phone }}
+                    {% endif %}
+                  </div>
+                  {% endif %}
+
+                </td>
+              </tr></tbody>
+            </table>
+          </td>
+
+          {% set ns.col = ns.col + 1 %}
+          {% if ns.col == 2 %}
+            </tr>
+            {% set ns.col = 0 %}
+          {% endif %}
+        {% endfor %}
+
+        {# Pad incomplete last row #}
+        {% if ns.col > 0 %}
+          <td width="50%" valign="top" style="padding:6px;"></td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    {% if not jobs %}
+    <div style="text-align:center;color:#9ca3af;font-size:13px;padding:24px 0;">
+      No job opportunities to display.
+    </div>
+    {% endif %}
+
+    {% if cta_url %}
+    <div style="margin-top:14px;">
+      <a href="{{ cta_url }}" style="display:inline-block;background:#ea580c;color:#ffffff;
+           text-decoration:none;font-size:14px;font-weight:700;padding:12px 16px;border-radius:12px;">
+        {{ cta_label | default("View All Job Opportunities") }}
+      </a>
+    </div>
+    {% endif %}
+
+  </td>
+</tr>

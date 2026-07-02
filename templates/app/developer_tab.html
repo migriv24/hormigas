@@ -1,0 +1,76 @@
+<div class="dev-tab">
+
+  <!-- Toolbar -->
+  <div class="panel-toolbar">
+    <div>
+      <div style="font-size:17px;font-weight:700;">Developer</div>
+      <div style="font-size:12px;color:var(--text-muted);">Browser console · Server logs · Debug tools</div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;margin-left:auto;">
+      <label style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:4px;cursor:pointer;">
+        <input type="checkbox" id="dev-autoscroll" checked> Auto-scroll
+      </label>
+      <select id="dev-level-filter" style="font-size:12px;" onchange="devApplyFilter()">
+        <option value="">All levels</option>
+        <option value="EVENT">Events+</option>
+        <option value="DEBUG">DEBUG+</option>
+        <option value="INFO">INFO+</option>
+        <option value="WARNING">WARNING+</option>
+        <option value="ERROR">ERROR+</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="devClearConsole()" style="font-size:12px;">Clear console</button>
+      <button class="btn btn-ghost btn-sm" onclick="devClearServer()" style="font-size:12px;">Clear server</button>
+      <button class="btn btn-ghost btn-sm" onclick="devCopyLogs()" style="font-size:12px;" title="Copy all logs to clipboard">📋 Copy</button>
+      <button id="dev-mode-btn" class="btn btn-outline btn-sm"
+              onclick="devToggleAdvanced()" style="font-size:12px;"
+              title="Show full action log">Advanced mode</button>
+    </div>
+  </div>
+
+  <!-- Body grid: 2-col (simple) or 3-col (advanced) -->
+  <div id="dev-body-grid"
+       style="display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden;gap:0;min-height:0;">
+
+    <!-- Action log (advanced mode only) -->
+    <div id="dev-action-pane" class="hidden"
+         style="display:flex;flex-direction:column;border-right:1px solid var(--border);min-height:0;">
+      <div style="padding:8px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;
+                  color:#3b82f6;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+        <span>ACTION LOG</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="dev-action-count" style="font-weight:400;color:var(--text-muted);"></span>
+          <button class="btn btn-ghost btn-sm" onclick="devClearActions()" style="font-size:11px;">Clear</button>
+        </div>
+      </div>
+      <div id="dev-action-log" style="flex:1;overflow-y:auto;font-family:monospace;font-size:12px;
+                                      padding:8px 0;"></div>
+    </div>
+
+    <!-- Browser console -->
+    <div style="display:flex;flex-direction:column;border-right:1px solid var(--border);min-height:0;">
+      <div style="padding:8px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;
+                  color:var(--text-muted);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+        <span>BROWSER CONSOLE</span>
+        <span id="dev-console-count" style="font-weight:400;"></span>
+      </div>
+      <div id="dev-console-log" style="flex:1;overflow-y:auto;font-family:monospace;font-size:12px;
+                                        padding:8px 0;"></div>
+    </div>
+
+    <!-- Server logs -->
+    <div style="display:flex;flex-direction:column;min-height:0;">
+      <div style="padding:8px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;
+                  color:var(--text-muted);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+        <span>SERVER LOGS</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="dev-server-count" style="font-weight:400;"></span>
+          <button class="btn btn-ghost btn-sm" onclick="devRefreshServer()" style="font-size:11px;">↺ Refresh</button>
+        </div>
+      </div>
+      <div id="dev-server-log" style="flex:1;overflow-y:auto;font-family:monospace;font-size:12px;
+                                       padding:8px 0;"></div>
+    </div>
+
+  </div>
+
+</div>

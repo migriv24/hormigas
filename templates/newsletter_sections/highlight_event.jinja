@@ -1,0 +1,104 @@
+<tr>
+  <td style="background:#ffffff;border-radius:16px;padding:0;
+             box-shadow:0 8px 24px rgba(17,24,39,0.08);font-family:Arial,Helvetica,sans-serif;overflow:hidden;">
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tbody>
+
+        <!-- Teal header band -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#0f766e 0%,#0b5c55 100%);padding:20px 24px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tbody><tr>
+                <!-- Icon -->
+                <td width="56" valign="middle" style="padding-right:16px;">
+                  <img src="{{ event_icon_url | default('https://i.ibb.co/FLvxMqfJ/10691802.png') }}"
+                       alt="" width="48" height="48"
+                       style="display:block;border-radius:10px;background:#ffffff22;padding:4px;">
+                </td>
+                <!-- Title block -->
+                <td valign="middle">
+                  <div style="font-size:11px;font-weight:700;letter-spacing:.08em;
+                              text-transform:uppercase;color:#99f6e4;line-height:1;">
+                    Featured Event
+                  </div>
+                  <div style="font-size:20px;font-weight:800;color:#ffffff;line-height:1.2;margin-top:4px;">
+                    {{ title_override or event_title }}
+                  </div>
+                  {% if subtitle %}
+                  <div style="font-size:13px;color:#ccfbf1;line-height:1.4;margin-top:4px;">
+                    {{ subtitle }}
+                  </div>
+                  {% endif %}
+                </td>
+              </tr></tbody>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Event detail chips -->
+        <tr>
+          <td style="padding:16px 24px 12px 24px;background:#f0fdf9;
+                     border-bottom:1px solid #d1fae5;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tbody><tr>
+                {% if event_days %}
+                <td style="padding-right:20px;vertical-align:top;">
+                  <div style="font-size:11px;font-weight:700;color:#0f766e;
+                              text-transform:uppercase;letter-spacing:.06em;">Date</div>
+                  <div style="font-size:14px;color:#111827;margin-top:2px;font-weight:600;">
+                    {{ event_days }}
+                  </div>
+                </td>
+                {% endif %}
+                {% if event_time %}
+                <td style="padding-right:20px;vertical-align:top;">
+                  <div style="font-size:11px;font-weight:700;color:#0f766e;
+                              text-transform:uppercase;letter-spacing:.06em;">Time</div>
+                  <div style="font-size:14px;color:#111827;margin-top:2px;font-weight:600;">
+                    {{ event_time }}
+                  </div>
+                </td>
+                {% endif %}
+                {% if event_location %}
+                <td style="vertical-align:top;">
+                  <div style="font-size:11px;font-weight:700;color:#0f766e;
+                              text-transform:uppercase;letter-spacing:.06em;">Location</div>
+                  <div style="font-size:14px;color:#111827;margin-top:2px;font-weight:600;">
+                    {{ event_location }}
+                  </div>
+                </td>
+                {% endif %}
+              </tr></tbody>
+            </table>
+          </td>
+        </tr>
+
+        <!-- CTA + note -->
+        <tr>
+          <td style="padding:18px 24px 20px 24px;">
+
+            {% if event_virtual_location or cta_url %}
+            {% set link = cta_url or event_virtual_location %}
+            <a href="{{ link }}"
+               style="display:inline-block;background:#0f766e;color:#ffffff;
+                      text-decoration:none;font-size:14px;font-weight:700;
+                      padding:12px 22px;border-radius:12px;letter-spacing:.02em;">
+              {{ cta_label | default("Join Now") }}
+            </a>
+            {% endif %}
+
+            {% if note %}
+            <div style="font-size:12px;line-height:1.6;color:#6b7280;margin-top:12px;">
+              {{ note }}
+            </div>
+            {% endif %}
+
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </td>
+</tr>

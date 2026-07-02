@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hormiga — Open Database</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 520px;
+      height: 480px;
+      background: #f5f4f3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 28px 24px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #14110F;
+      overflow: hidden;
+      user-select: none;
+      -webkit-app-region: drag;
+    }
+
+    /* ── Header ── */
+    .icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+      animation: fadeUp 0.4s ease 0.05s both;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      animation: fadeUp 0.4s ease 0.12s both;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: #9a8f8b;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-top: 3px;
+      margin-bottom: 20px;
+      animation: fadeUp 0.4s ease 0.18s both;
+    }
+
+    /* ── Recent databases ── */
+    .recents-section {
+      width: 100%;
+      -webkit-app-region: no-drag;
+      animation: fadeUp 0.4s ease 0.22s both;
+    }
+
+    .recents-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #b0a9a6;
+      margin-bottom: 6px;
+      padding-left: 2px;
+    }
+
+    .recents-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 160px;
+      overflow-y: auto;
+      margin-bottom: 14px;
+    }
+
+    .recent-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: #fff;
+      border: 1.5px solid #e8e5e2;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: border-color 0.12s, background 0.12s;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    .recent-item:hover { border-color: #A4031F; background: #fff9f9; }
+
+    .recent-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .recent-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .recent-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #14110F;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .recent-path {
+      font-size: 10px;
+      color: #b0a9a6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    /* ── Actions ── */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      -webkit-app-region: no-drag;
+      animation: fadeUp 0.4s ease 0.28s both;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px 20px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      letter-spacing: 0.01em;
+      transition: background 0.15s, opacity 0.15s, transform 0.1s;
+      font-family: inherit;
+      text-align: center;
+    }
+
+    .btn:active:not(:disabled) { transform: scale(0.98); }
+
+    .btn-primary {
+      background: #A4031F;
+      color: #fff;
+    }
+    .btn-primary:hover { background: #8c0219; }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid #d8d3d0;
+      color: #6b6360;
+    }
+    .btn-outline:hover { border-color: #A4031F; color: #A4031F; }
+
+    /* ── Password prompt ── */
+    .password-section {
+      width: 100%;
+      margin-top: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeUp 0.25s ease both;
+      -webkit-app-region: no-drag;
+    }
+
+    .password-section.visible { display: flex; }
+
+    .password-label {
+      font-size: 11px;
+      color: #6b6360;
+    }
+
+    .password-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .password-input {
+      flex: 1;
+      padding: 9px 12px;
+      border: 1.5px solid #dedad8;
+      border-radius: 6px;
+      font-size: 13px;
+      background: #fff;
+      color: #14110F;
+      outline: none;
+      transition: border-color 0.15s;
+      font-family: inherit;
+    }
+
+    .password-input:focus { border-color: #A4031F; }
+
+    .btn-confirm {
+      padding: 9px 16px;
+      background: #A4031F;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+    .btn-confirm:hover { background: #8c0219; }
+
+    /* ── Status ── */
+    .status {
+      margin-top: 12px;
+      font-size: 11px;
+      min-height: 16px;
+      color: #9a8f8b;
+      text-align: center;
+      width: 100%;
+      -webkit-app-region: no-drag;
+    }
+
+    .status.error { color: #A4031F; }
+    .status.good  { color: #5a8a5a; }
+
+    /* ── Version ── */
+    .version {
+      position: absolute;
+      bottom: 12px;
+      right: 16px;
+      font-size: 10px;
+      color: #c5c0bd;
+      letter-spacing: 0.05em;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <img class="icon" src="../assets/icons/icon.png" alt="Hormiga">
+  <div class="title">Hormiga</div>
+  <div class="subtitle">by LON</div>
+
+  <!-- Recent databases -->
+  <div class="recents-section" id="recentsSection" style="display:none;">
+    <div class="recents-label">Recent databases</div>
+    <div class="recents-list" id="recentsList"></div>
+  </div>
+
+  <!-- Main action buttons -->
+  <div class="actions">
+    <button class="btn btn-primary" id="btnOpen">Open database file (.miga)…</button>
+    <button class="btn btn-outline" id="btnNew">New database…</button>
+  </div>
+
+  <!-- Password prompt -->
+  <div class="password-section" id="passwordSection">
+    <div class="password-label">This file is password-protected. Enter the password:</div>
+    <div class="password-row">
+      <input class="password-input" id="passwordInput" type="password" placeholder="Password" autocomplete="off">
+      <button class="btn-confirm" id="btnConfirm">Unlock</button>
+    </div>
+  </div>
+
+  <div class="status" id="status"></div>
+  <div class="version" id="versionLabel">v—</div>
+
+  <script>
+    const btnOpen         = document.getElementById('btnOpen')
+    const btnNew          = document.getElementById('btnNew')
+    const passwordSection = document.getElementById('passwordSection')
+    const passwordInput   = document.getElementById('passwordInput')
+    const btnConfirm      = document.getElementById('btnConfirm')
+    const statusEl        = document.getElementById('status')
+    const recentsSection  = document.getElementById('recentsSection')
+    const recentsList     = document.getElementById('recentsList')
+
+    let pendingFilePath = null
+
+    // Version label
+    const v = window.landing?.appVersion
+    if (v) document.getElementById('versionLabel').textContent = 'v' + v
+
+    function setStatus(msg, type = '') {
+      statusEl.textContent = msg
+      statusEl.className   = 'status' + (type ? ' ' + type : '')
+    }
+
+    function setLoading(loading) {
+      btnOpen.disabled    = loading
+      btnNew.disabled     = loading
+      btnConfirm.disabled = loading
+      btnOpen.textContent = loading ? 'Loading…' : 'Open database file (.miga)…'
+    }
+
+    // ── Recent databases ──────────────────────────────────────────────────────
+
+    async function loadRecents() {
+      if (!window.landing?.getRecent) return
+      const recents = await window.landing.getRecent()
+      if (!recents || !recents.length) return
+
+      recentsSection.style.display = 'block'
+      recentsList.innerHTML = ''
+
+      recents.forEach(r => {
+        const btn = document.createElement('button')
+        btn.className = 'recent-item'
+        btn.innerHTML = `
+          <span class="recent-icon">🗄</span>
+          <div class="recent-info">
+            <div class="recent-name">${escHtml(r.name)}</div>
+            <div class="recent-path">${escHtml(r.path)}</div>
+          </div>
+        `
+        btn.addEventListener('click', () => openRecent(r.path))
+        recentsList.appendChild(btn)
+      })
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+    }
+
+    async function openRecent(filePath) {
+      setStatus('Opening…')
+      setLoading(true)
+      const result = await window.landing.openRecent(filePath)
+      setLoading(false)
+
+      if (!result) { setStatus(''); return }
+
+      if (result.ok) {
+        setStatus('Database loaded! Starting Hormiga…', 'good')
+      } else if (result.requiresPassword) {
+        pendingFilePath = result.filePath
+        passwordSection.classList.add('visible')
+        passwordInput.value = ''
+        passwordInput.focus()
+        setStatus('Enter the password to unlock this file.')
+      } else {
+        setStatus(result.error || 'Could not open file.', 'error')
+      }
+    }
+
+    // ── Open file picker ──────────────────────────────────────────────────────
+
+    btnOpen.addEventListener('click', async () => {
+      passwordSection.classList.remove('visible')
+      pendingFilePath = null
+      setStatus('')
+
+      const result = await window.landing.openFile()
+      if (!result) return
+
+      if (!result.ok) {
+        if (result.requiresPassword) {
+          pendingFilePath = result.filePath
+          passwordSection.classList.add('visible')
+          passwordInput.value = ''
+          passwordInput.focus()
+          setStatus('Enter the password to unlock this file.')
+        } else {
+          setStatus(result.error || 'Could not open file.', 'error')
+        }
+        return
+      }
+
+      setStatus('Database loaded! Starting Hormiga…', 'good')
+    })
+
+    // ── New database ──────────────────────────────────────────────────────────
+
+    btnNew.addEventListener('click', async () => {
+      await window.landing.newDatabase()
+    })
+
+    // ── Password unlock ───────────────────────────────────────────────────────
+
+    async function submitPassword() {
+      const pw = passwordInput.value.trim()
+      if (!pw || !pendingFilePath) return
+
+      setLoading(true)
+      setStatus('Decrypting…')
+
+      const result = await window.landing.loadWithPassword(pendingFilePath, pw)
+      setLoading(false)
+
+      if (result.ok) {
+        passwordSection.classList.remove('visible')
+        setStatus('Database loaded! Starting Hormiga…', 'good')
+      } else {
+        setStatus(result.error || 'Wrong password.', 'error')
+        passwordInput.select()
+      }
+    }
+
+    btnConfirm.addEventListener('click', submitPassword)
+    passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitPassword() })
+
+    // ── Status from main ──────────────────────────────────────────────────────
+
+    if (window.landing) {
+      window.landing.onStatus((msg) => setStatus(msg))
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+
+    loadRecents()
+  </script>
+</body>
+</html>

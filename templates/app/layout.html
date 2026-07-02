@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hormiga — Latine Outreach Network</title>
+  <link rel="stylesheet" href="/static/css/app.css?v=4">
+  <script>
+    // Apply theme before first paint to prevent flash.
+    // User's saved preference wins; falls back to the app variant's default.
+    (function() {
+      const saved   = localStorage.getItem('hormiga-theme');
+      const variant = window.hormiga?.variant;
+      const theme   = saved || (variant && variant !== 'stable' ? variant : null);
+      if (theme && theme !== 'default') document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body data-platform="web">
+
+  <div class="shell">
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <img src="/static/assets/hormiga.png" class="sidebar-logo-img" alt="Hormiga">
+        <div class="sidebar-title">Hormiga<br><span class="sidebar-subtitle">by LON</span></div>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Collapse sidebar">‹</button>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li><a href="#" class="nav-link active" data-tab="data" data-tooltip="Data Manager">
+          <span class="nav-icon">📋</span><span class="nav-label"> Data Manager</span>
+        </a></li>
+        <li><a href="#" class="nav-link" data-tab="newsletter" data-tooltip="Newsletter Builder">
+          <span class="nav-icon">✉️</span><span class="nav-label"> Newsletter Builder</span>
+        </a></li>
+        <li><a href="#" class="nav-link" data-tab="images" data-tooltip="Images">
+          <span class="nav-icon">🖼</span><span class="nav-label"> Images</span>
+        </a></li>
+        <li><a href="#" class="nav-link" data-tab="orgs" data-tooltip="Organizations">
+          <span class="nav-icon">🏢</span><span class="nav-label"> Organizations</span>
+        </a></li>
+        <li><a href="#" class="nav-link" data-tab="jobs" data-tooltip="Job Opportunities">
+          <span class="nav-icon">💼</span><span class="nav-label"> Jobs</span>
+        </a></li>
+        <li><a href="#" class="nav-link" data-tab="resources" data-tooltip="Attached Resources">
+          <span class="nav-icon">📎</span><span class="nav-label"> Resources</span>
+        </a></li>
+        <li><a href="#" class="nav-link" data-tab="connections" data-tooltip="Connections">
+          <span class="nav-icon">🔗</span><span class="nav-label"> Connections</span>
+        </a></li>
+        <li><a href="#" class="nav-link" data-tab="settings" data-tooltip="Settings">
+          <span class="nav-icon">⚙️</span><span class="nav-label"> Settings</span>
+        </a></li>
+        <li id="nav-dev-item" style="display:none;"><a href="#" class="nav-link" data-tab="developer" data-tooltip="Developer">
+          <span class="nav-icon">🛠</span><span class="nav-label"> Developer</span>
+        </a></li>
+        <li><a href="#" class="nav-link" data-tab="help" data-tooltip="About & Help">
+          <span class="nav-icon">ℹ️</span><span class="nav-label"> About</span>
+        </a></li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <!-- Status bar: shows current state, progress, hover hints -->
+        <div class="status-bar" id="statusBar">
+          <div class="status-bar-main">
+            <span class="sync-dot" id="syncDot"></span>
+            <span class="status-text" id="statusText">Ready</span>
+          </div>
+          <div class="status-progress hidden" id="statusProgress">
+            <div class="status-progress-fill" id="statusProgressFill"></div>
+          </div>
+        </div>
+        <!-- Controls -->
+        <div class="sidebar-controls">
+          <button class="btn btn-sm btn-outline" id="syncBtn" data-tooltip="Check for changes in Google Sheets">
+            ↙<span class="nav-label"> Pull Sheet</span>
+          </button>
+          <div class="undo-bar">
+            <button class="btn btn-sm btn-ghost" id="undoBtn" disabled data-tooltip="Undo last action">↩<span class="nav-label"> Undo</span></button>
+            <button class="btn btn-sm btn-ghost" id="redoBtn" disabled data-tooltip="Redo last undone action">↪<span class="nav-label"> Redo</span></button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content area -->
+    <main class="main">
+      <div id="tab-data" class="tab-panel active">
+        {% include "app/data_tab.html" %}
+      </div>
+      <div id="tab-newsletter" class="tab-panel hidden">
+        {% include "app/newsletter_tab.html" %}
+      </div>
+      <div id="tab-images" class="tab-panel hidden">
+        {% include "app/images_tab.html" %}
+      </div>
+      <div id="tab-orgs" class="tab-panel hidden">
+        {% include "app/orgs_tab.html" %}
+      </div>
+      <div id="tab-jobs" class="tab-panel hidden">
+        {% include "app/jobs_tab.html" %}
+      </div>
+      <div id="tab-resources" class="tab-panel hidden">
+        {% include "app/resources_tab.html" %}
+      </div>
+      <div id="tab-connections" class="tab-panel hidden">
+        {% include "app/connections_tab.html" %}
+      </div>
+      <div id="tab-settings" class="tab-panel hidden">
+        {% include "app/settings_tab.html" %}
+      </div>
+      <div id="tab-help" class="tab-panel hidden">
+        {% include "app/help_tab.html" %}
+      </div>
+      <div id="tab-developer" class="tab-panel hidden">
+        {% include "app/developer_tab.html" %}
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Toast notifications -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Global floating tooltip (populated by JS) -->
+  <div class="tooltip-popup" id="tooltipEl" role="tooltip" aria-hidden="true"></div>
+
+  <script src="/static/js/event_bus.js"></script>
+  <script src="/static/js/action_log.js"></script>
+  <script src="/static/js/syntax_engine.js"></script>
+  <script src="/static/js/smart_fields.js"></script>
+  <script src="/static/js/data_tab.js?v=2"></script>
+  <script src="/static/js/builder.js"></script>
+  <script src="/static/js/images_tab.js?v=7"></script>
+  <script src="/static/js/orgs_tab.js"></script>
+  <script src="/static/js/jobs_tab.js"></script>
+  <script src="/static/js/resources_tab.js?v=9"></script>
+  <script src="/static/js/developer_tab.js"></script>
+  <script src="/static/js/connections_tab.js"></script>
+  <script src="/static/js/settings_tab.js?v=3"></script>
+  <script src="/static/js/app.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<div class="resources-tab">
+
+  <!-- Toolbar -->
+  <div class="panel-toolbar">
+    <div>
+      <div style="font-size:17px;font-weight:700;">Attached Resources</div>
+      <div style="font-size:12px;color:var(--text-muted);">PDFs and files for email attachments — generate a page-preview graphic for each one</div>
+    </div>
+    <span class="record-count" id="resourceCount"></span>
+    <div style="display:flex;gap:6px;align-items:center;margin-left:auto;">
+      <!-- View toggle -->
+      <button id="resViewToggle" class="btn btn-ghost btn-sm" title="Toggle view"
+              onclick="resToggleView()" style="font-size:15px;padding:4px 8px;">⊞</button>
+      <!-- Overlay approach: file input covers button, no JS needed to open picker -->
+      <div style="position:relative;display:inline-flex;flex-shrink:0;">
+        <button class="btn btn-primary btn-sm" style="pointer-events:none;user-select:none;">⬆ Upload</button>
+        <input type="file" id="resourceFileInput" accept=".pdf,.docx,.xlsx,.doc,.xls,.pptx"
+               style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:1;" tabindex="-1">
+      </div>
+    </div>
+  </div>
+
+  <!-- Tag filter bar -->
+  <div id="resFilterBar"
+       style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+              padding:8px 20px;border-bottom:1px solid var(--border);flex-shrink:0;min-height:40px;">
+  </div>
+
+  <!-- Text search -->
+  <div style="padding:6px 20px;border-bottom:1px solid var(--border);flex-shrink:0;">
+    <input type="text" id="resTextFilter" placeholder="Search resources…"
+           style="width:100%;max-width:340px;font-size:13px;"
+           oninput="resOnTextFilter(this.value)">
+  </div>
+
+  <!-- Upload staging form -->
+  <div id="resourceUploadForm" class="hidden"
+       style="padding:12px 20px;background:var(--surface-alt,#f9fafb);border-bottom:1px solid var(--border);
+              display:flex;flex-direction:column;gap:8px;flex-shrink:0;">
+    <div style="font-size:13px;font-weight:600;" id="resourceUploadFilename"></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <input type="text" id="resourceDisplayName" placeholder="Display name"
+             style="flex:1;min-width:160px;font-size:13px;">
+      <select id="resourceLang" style="font-size:13px;min-width:130px;">
+        <option value="">Both / Neutral</option>
+        <option value="en">English (EN)</option>
+        <option value="es">Spanish (ES)</option>
+      </select>
+      <input type="text" id="resourceTags" placeholder="Tags (comma-separated)"
+             style="flex:1;min-width:160px;font-size:13px;" list="resourceTagSuggestions">
+      <datalist id="resourceTagSuggestions"></datalist>
+      <button class="btn btn-primary btn-sm" onclick="submitResourceUpload()">Upload</button>
+      <button class="btn btn-ghost btn-sm" onclick="cancelResourceUpload()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Drop zone -->
+  <div id="resDropZone"
+       style="margin:0 20px;padding:8px 16px;border:2px dashed transparent;border-radius:8px;
+              text-align:center;font-size:12px;color:var(--text-muted);transition:all 0.15s;flex-shrink:0;">
+    Drop a PDF or document here to upload
+  </div>
+
+  <!-- Resource grid / list -->
+  <div style="flex:1;overflow-y:auto;padding:16px 20px;">
+    <div id="resourceList"></div>
+    <div id="resourceEmpty"
+         style="color:var(--text-muted);text-align:center;padding:60px 20px;font-size:14px;">
+      <div style="font-size:40px;margin-bottom:12px;">📎</div>
+      No resources yet.<br>Upload a PDF to get started.
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Edit modal ──────────────────────────────────────────────────────────── -->
+<div id="resEditModal" class="modal-overlay hidden" onclick="resEditClose(event)">
+  <div class="modal-card" style="max-width:480px;width:100%;" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="font-weight:700;font-size:15px;">Edit Resource</div>
+      <button class="btn btn-ghost btn-sm" onclick="resEditClose()">✕</button>
+    </div>
+
+    <div class="form-field">
+      <label>Display Name</label>
+      <input type="text" id="re-name">
+    </div>
+    <div class="form-field">
+      <label>Description</label>
+      <textarea id="re-desc" rows="2" style="resize:vertical;"></textarea>
+    </div>
+    <div class="form-field">
+      <label>Language</label>
+      <select id="re-lang">
+        <option value="">Both / Neutral</option>
+        <option value="en">English (EN)</option>
+        <option value="es">Spanish (ES)</option>
+      </select>
+    </div>
+
+    <!-- Pair section -->
+    <div class="form-field">
+      <label>Language Pair (EN ↔ ES)</label>
+      <div id="re-pair-status" style="font-size:13px;color:var(--text-muted);margin-bottom:6px;"></div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-sm btn-outline" id="re-pair-btn" onclick="resPairPickerOpen()">
+          🔗 Pair with another resource
+        </button>
+        <button class="btn btn-sm btn-ghost" id="re-unpair-btn" onclick="resUnpair()" style="display:none;">
+          Unpair
+        </button>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="form-field">
+      <label>Tags</label>
+      <div id="re-tags-chips" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;"></div>
+      <div style="display:flex;gap:6px;">
+        <input type="text" id="re-tag-input" placeholder="Add tag…" style="flex:1;font-size:13px;"
+               list="reTagSuggestions" onkeydown="resEditTagKey(event)">
+        <datalist id="reTagSuggestions"></datalist>
+        <button class="btn btn-sm btn-outline" onclick="resEditAddTag()">Add</button>
+      </div>
+    </div>
+
+    <!-- Preview action -->
+    <div id="re-preview-row" style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <span id="re-preview-status" style="font-size:12px;color:var(--text-muted);flex:1;"></span>
+      <button class="btn btn-sm btn-outline" style="font-size:12px;"
+              id="re-gen-btn" onclick="resEditGenerateGraphic()">🎨 Generate Preview</button>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:space-between;margin-top:4px;">
+      <button class="btn btn-sm btn-ghost" style="color:var(--danger,#dc2626);"
+              onclick="resEditDelete()">Delete</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-sm btn-ghost" onclick="resEditClose()">Cancel</button>
+        <button class="btn btn-sm btn-primary" onclick="resEditSave()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Pair picker modal ───────────────────────────────────────────────────── -->
+<div id="resPairModal" class="modal-overlay hidden" onclick="resPairPickerClose(event)">
+  <div class="modal-card" style="max-width:420px;width:100%;" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="font-weight:700;font-size:15px;">Pair with Resource</div>
+      <button class="btn btn-ghost btn-sm" onclick="resPairPickerClose()">✕</button>
+    </div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">
+      Select the counterpart resource in the other language.
+    </div>
+    <div id="resPairList" style="display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto;"></div>
+  </div>
+</div>

@@ -1,0 +1,159 @@
+<div class="server-tab">
+
+  <!-- ── Status Banner ──────────────────────────────────────────────────────── -->
+  <div class="server-banner" id="serverBanner">
+    <div class="server-banner-left">
+      <div class="server-status-dot" id="serverDot"></div>
+      <div style="min-width:0;">
+        <div class="server-status-label" id="serverStatusLabel">Tunnel Off</div>
+        <div class="server-status-sublabel" id="serverStatusSub">Start the tunnel to share this server</div>
+        <div class="server-status-url-pill hidden" id="serverUrlPill">
+          <span id="serverUrlPillText"></span>
+          <button class="server-url-pill-copy" onclick="serverCopyUrl()" title="Copy">⎘</button>
+        </div>
+      </div>
+    </div>
+    <div class="server-banner-right">
+      <button class="btn btn-sm" id="serverToggleBtn" onclick="serverToggle()">Start Tunnel</button>
+    </div>
+  </div>
+
+  <!-- ── Cloudflared not installed notice ───────────────────────────────────── -->
+  <div class="server-notice hidden" id="serverNotInstalled">
+    <div class="server-notice-icon">🔌</div>
+    <div class="server-notice-body">
+      <div class="server-notice-title">cloudflared not installed</div>
+      <div class="server-notice-desc">
+        Hormiga uses Cloudflare Tunnel to share your local server over the internet — no port-forwarding needed.
+      </div>
+      <div class="server-notice-steps">
+        <div class="server-notice-step"><span class="server-step-num">1</span>Download <code>cloudflared-windows-amd64.exe</code> from <strong>developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/</strong></div>
+        <div class="server-notice-step"><span class="server-step-num">2</span>Rename it to <code>cloudflared.exe</code> and place it in this project folder (next to <code>app.py</code>), or add it to your PATH.</div>
+        <div class="server-notice-step"><span class="server-step-num">3</span>Restart Hormiga and come back here.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="server-body" id="serverBody">
+    <div class="server-col-left">
+
+      <!-- ── Active server card (always visible, content changes with state) ── -->
+      <div class="server-card server-connect-card" id="serverConnectCard">
+        <div class="server-card-title">Database Access URL</div>
+
+        <!-- Offline state -->
+        <div id="srvUrlOffline" class="server-url-offline">
+          <span class="server-url-offline-icon">📡</span>
+          <span>Start the tunnel to get a shareable URL</span>
+        </div>
+
+        <!-- Online state -->
+        <div id="srvUrlOnline" style="display:none;">
+          <div class="server-field">
+            <label class="server-label">Share this URL with your mobile app</label>
+            <div class="server-url-box" id="serverUrlBox">
+              <span class="server-url-text" id="serverUrlText">—</span>
+              <button class="btn btn-sm btn-ghost server-url-copy" onclick="serverCopyUrl()" title="Copy URL">⎘</button>
+            </div>
+          </div>
+
+          <div class="server-field" id="srvConnTokenField" style="display:none;">
+            <label class="server-label">Access Token</label>
+            <div class="server-token-row">
+              <input type="password" class="server-input server-token-input" id="srvConnToken" readonly>
+              <button class="btn btn-sm btn-ghost" onclick="serverRevealConnToken()" title="Show/hide">👁</button>
+              <button class="btn btn-sm btn-ghost" onclick="serverCopyConnToken()" title="Copy">⎘</button>
+            </div>
+            <div class="server-hint">Paste into the Hormiga mobile app along with the URL above.</div>
+          </div>
+
+          <div class="server-field">
+            <label class="server-label">QR Code</label>
+            <div class="server-qr-inline" id="serverQrInline">
+              <div class="server-qr-loading">Loading…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Config card ──────────────────────────────────────────────────────── -->
+      <div class="server-card">
+        <div class="server-card-title">Server Settings</div>
+
+        <div class="server-field">
+          <label class="server-label">Server Name</label>
+          <input type="text" class="server-input" id="srvName" placeholder="Hormiga Server" maxlength="60">
+        </div>
+
+        <div class="server-field">
+          <label class="server-label">Port</label>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label class="server-toggle-wrap" style="flex-shrink:0;">
+              <input type="checkbox" id="srvAutoPort" onchange="serverAutoPortToggle()">
+              <span class="server-toggle-track"></span>
+            </label>
+            <span class="server-label" style="margin:0;font-weight:500;" id="srvAutoPortLabel">Auto</span>
+            <input type="number" class="server-input" id="srvPort" min="1024" max="65535" style="width:90px;">
+          </div>
+          <div class="server-hint" id="srvPortHint">Auto uses the same port as the Hormiga app (recommended).</div>
+        </div>
+
+        <div class="server-field server-field--row">
+          <div>
+            <div class="server-label">Require Access Token</div>
+            <div class="server-hint">External connections must present the token. Local access is always allowed.</div>
+          </div>
+          <label class="server-toggle-wrap">
+            <input type="checkbox" id="srvTokenEnabled" onchange="serverSaveConfig()">
+            <span class="server-toggle-track"></span>
+          </label>
+        </div>
+
+        <div class="server-field" id="srvTokenField">
+          <label class="server-label">Access Token</label>
+          <div class="server-token-row">
+            <input type="password" class="server-input server-token-input" id="srvTokenVal" readonly>
+            <button class="btn btn-sm btn-ghost" onclick="serverRevealToken()" title="Show / hide token">👁</button>
+            <button class="btn btn-sm btn-ghost" onclick="serverCopyToken()" title="Copy token">⎘</button>
+            <button class="btn btn-sm btn-outline" onclick="serverRegenToken()" title="Generate new token">↺</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="btn btn-primary" onclick="serverSaveConfig()">Save</button>
+        </div>
+      </div>
+
+      <!-- ── Recent connections card ──────────────────────────────────────────── -->
+      <div class="server-card">
+        <div class="server-card-title" style="display:flex;align-items:center;justify-content:space-between;">
+          Recent Connections
+          <button class="btn btn-sm btn-ghost" onclick="serverLoadConnections()" title="Refresh">↺</button>
+        </div>
+        <div id="serverConnTable" class="server-conn-table">
+          <div class="server-empty-hint">No connections recorded yet.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="server-col-right">
+
+      <!-- ── Live log card ────────────────────────────────────────────────────── -->
+      <div class="server-card server-log-card">
+        <div class="server-card-title" style="display:flex;align-items:center;justify-content:space-between;">
+          Tunnel Log
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span class="server-log-badge" id="serverLogBadge">—</span>
+            <button class="btn btn-sm btn-ghost" onclick="serverClearLog()" title="Clear display">✕</button>
+          </div>
+        </div>
+        <div class="server-log" id="serverLog">
+          <div class="server-log-placeholder">Tunnel log will appear here when running.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

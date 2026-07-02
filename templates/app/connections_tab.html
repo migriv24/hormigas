@@ -1,0 +1,116 @@
+<!-- ── Connections Manager Tab ─────────────────────────────────────────────── -->
+<div class="conn-layout">
+
+  <!-- ── Left: Entity List ───────────────────────────────────────────────── -->
+  <div class="conn-sidebar">
+
+    <div class="conn-sidebar-header">
+      <h2 class="conn-title">Connections Manager</h2>
+      <div class="conn-type-tabs" id="connTypeTabs">
+        <button class="conn-type-btn active" data-ctype="all">All</button>
+        <button class="conn-type-btn" data-ctype="contact">People</button>
+        <button class="conn-type-btn" data-ctype="org">Orgs</button>
+        <button class="conn-type-btn" data-ctype="event">Events</button>
+        <button class="conn-type-btn" data-ctype="image">Images</button>
+        <button class="conn-type-btn" data-ctype="tag">Tags</button>
+        <button class="conn-type-btn" data-ctype="_tagmgr" title="Manage all tags">⚙ Tag Manager</button>
+      </div>
+      <div class="conn-search-row">
+        <input type="text" id="connSearch" class="conn-search" placeholder="Search entities…">
+        <button class="btn btn-sm btn-outline" id="connSyncBtn" data-tooltip="Sync people, orgs, events, and images from Sheet + local stores">
+          ↻ Sync
+        </button>
+        <button class="btn btn-sm btn-primary" id="connNewTagBtn" data-tooltip="Create a new graph tag with color">
+          + New Tag
+        </button>
+      </div>
+    </div>
+
+    <div id="connEntityList" class="conn-entity-list">
+      <div class="conn-empty">Click "↻ Sync Sheet" to import people and organizations,<br>then use "+ New Tag" to start tagging.</div>
+    </div>
+
+  </div>
+
+  <!-- ── Right: Detail Panel ─────────────────────────────────────────────── -->
+  <div class="conn-detail" id="connDetail">
+    <div class="conn-detail-empty">
+      <div style="font-size:36px;margin-bottom:12px;">🔗</div>
+      <div style="font-weight:600;margin-bottom:6px;">Select an entity</div>
+      <div style="color:var(--text-muted);font-size:13px;">Click a person, org, or tag on the left to view its connections.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── New Tag Modal ──────────────────────────────────────────────────────── -->
+<div id="connTagModal" class="modal-overlay hidden">
+  <div class="modal-box" style="width:420px;">
+    <div class="modal-header">
+      <h2 id="connTagModalTitle">New Tag</h2>
+      <button class="modal-close" id="connTagModalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label for="connTagName">Tag name</label>
+        <input type="text" id="connTagName" placeholder="e.g. service_worker" autocomplete="off">
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">
+          Use lowercase and underscores. Type <code>#tagname</code> in any name/org field to filter by this tag.
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Color</label>
+        <div class="conn-color-palette" id="connColorPalette">
+          <!-- swatches inserted by JS -->
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+          <label style="font-size:12px;color:var(--text-muted);">Custom:</label>
+          <input type="color" id="connTagColorCustom" value="#6366f1" style="width:40px;height:28px;border:none;padding:0;cursor:pointer;border-radius:4px;">
+          <span id="connTagColorPreview" class="conn-tag-chip" style="margin-left:4px;"></span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="connTagModalCancel">Cancel</button>
+      <button class="btn btn-primary" id="connTagModalSave">Save Tag</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Add Connection Modal ───────────────────────────────────────────────── -->
+<div id="connEdgeModal" class="modal-overlay hidden">
+  <div class="modal-box" style="width:440px;">
+    <div class="modal-header">
+      <h2>Add Connection</h2>
+      <button class="modal-close" id="connEdgeModalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label>From</label>
+        <div id="connEdgeFrom" style="font-weight:600;padding:6px 0;color:var(--text);"></div>
+      </div>
+      <div class="form-field">
+        <label for="connEdgeRelation">Relation</label>
+        <input type="text" id="connEdgeRelation" value="connected_to"
+               list="connEdgeRelationList" autocomplete="off" placeholder="e.g. connected_to, collaborates_with">
+        <datalist id="connEdgeRelationList">
+          <option value="connected_to">
+          <option value="collaborates_with">
+          <option value="mentors">
+          <option value="referred_by">
+          <option value="works_with">
+        </datalist>
+      </div>
+      <div class="form-field">
+        <label for="connEdgeTo">To (entity name)</label>
+        <input type="text" id="connEdgeTo" placeholder="Start typing a name or org…"
+               data-se autocomplete="off" list="connEdgeToList">
+        <datalist id="connEdgeToList"></datalist>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="connEdgeModalCancel">Cancel</button>
+      <button class="btn btn-primary" id="connEdgeModalSave">Add Connection</button>
+    </div>
+  </div>
+</div>

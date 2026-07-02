@@ -1,0 +1,77 @@
+name: Release
+
+# Triggers on version tags: v1.0.0, v0.2.1, etc.
+# Workflow:
+#   1. npm version patch/minor/major   → bumps version + creates git tag
+#   2. git push --follow-tags          → pushes tag → triggers this workflow
+#   3. Workflow builds Python binary + Electron installer for each platform
+#   4. Publishes installers to migriv24/hormiga-releases (public repo)
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: win
+            python-cmd: python
+          - os: macos-latest
+            platform: mac
+            python-cmd: python3
+          - os: ubuntu-latest
+            platform: linux
+            python-cmd: python3
+
+    runs-on: ${{ matrix.os }}
+    name: Build (${{ matrix.os }})
+
+    steps:
+      # ── Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # ── Python setup ──────────────────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt pyinstaller
+
+      # ── Build Python server binary ────────────────────────────────────────
+      - name: Build Python server (PyInstaller)
+        run: pyinstaller hormiga.spec --clean --distpath dist
+
+      - name: Verify binary exists (Unix)
+        if: matrix.os != 'windows-latest'
+        run: ls -lh dist/hormiga-server
+
+      - name: Verify binary exists (Windows)
+        if: matrix.os == 'windows-latest'
+        run: dir dist\hormiga-server.exe
+
+      # ── Node setup ────────────────────────────────────────────────────────
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      # ── Build + publish Electron installer ───────────────────────────────
+      # GH_TOKEN must be a PAT with 'repo' scope for migriv24/hormiga-releases.
+      # Add it as a secret named GH_TOKEN in this repo's settings.
+      - name: Build and publish (${{ matrix.platform }})
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx electron-builder --${{ matrix.platform }} --publish always

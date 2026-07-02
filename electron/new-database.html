@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Connect to Database — Hormiga</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f4f3;
+      color: #14110F;
+      font-size: 13px;
+      overflow-y: auto;
+    }
+
+    .container {
+      padding: 24px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    h1 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #14110F;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: #9a8f8b;
+      margin-top: 2px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #A4031F;
+      margin-bottom: 10px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1.5px solid #e3dedd;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b6360;
+      letter-spacing: 0.03em;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="url"] {
+      padding: 8px 10px;
+      border: 1.5px solid #dedad8;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #fafaf9;
+      color: #14110F;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus { border-color: #A4031F; background: #fff; }
+
+    .hint {
+      font-size: 10px;
+      color: #b0a9a6;
+      line-height: 1.4;
+    }
+
+    .file-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .file-label {
+      flex: 1;
+      font-size: 12px;
+      color: #9a8f8b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 8px 10px;
+      border: 1.5px solid #dedad8;
+      border-radius: 6px;
+      background: #fafaf9;
+      min-width: 0;
+    }
+
+    .file-label.loaded { color: #3a7a3a; font-weight: 600; }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+      transition: background 0.15s, transform 0.1s;
+      font-family: inherit;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid #dedad8;
+      color: #6b6360;
+    }
+    .btn-outline:hover { border-color: #A4031F; color: #A4031F; }
+
+    .btn-primary {
+      background: #A4031F;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 13px;
+    }
+    .btn-primary:hover { background: #8c0219; }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+
+    .btn-ghost {
+      background: transparent;
+      color: #6b6360;
+      border: none;
+    }
+    .btn-ghost:hover { color: #14110F; }
+
+    .footer {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+      padding-top: 4px;
+    }
+
+    .status {
+      font-size: 11px;
+      min-height: 16px;
+      color: #9a8f8b;
+      flex: 1;
+    }
+
+    .status.error { color: #A4031F; }
+    .status.good  { color: #3a7a3a; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div>
+      <h1>Connect to a Database</h1>
+      <div class="subtitle">Enter your API credentials. Supabase is required; the rest is optional but recommended.</div>
+    </div>
+
+    <!-- Supabase (required) -->
+    <div class="card">
+      <div class="section-title">Supabase — required</div>
+
+      <div class="field">
+        <label>Project URL</label>
+        <input type="url" id="f-supabase-url" placeholder="https://xxxxxxxxxxx.supabase.co">
+      </div>
+
+      <div class="field">
+        <label>Anon / Publishable Key</label>
+        <input type="text" id="f-supabase-key" placeholder="sb_publishable_…">
+        <div class="hint">Found in Supabase → Project Settings → API.</div>
+      </div>
+    </div>
+
+    <!-- Google Sheets (optional) -->
+    <div class="card">
+      <div class="section-title">Google Sheets — optional</div>
+
+      <div class="field">
+        <label>Spreadsheet ID</label>
+        <input type="text" id="f-sheet-id" placeholder="14B6YDm…">
+        <div class="hint">The long ID from your Google Sheets URL.</div>
+      </div>
+
+      <div class="field">
+        <label>Service Account Credentials (credentials.json)</label>
+        <div class="file-row">
+          <div class="file-label" id="f-creds-label">No file chosen</div>
+          <button class="btn btn-outline" id="btnPickCreds">Browse…</button>
+        </div>
+        <div class="hint">Your Google Cloud service account JSON file.</div>
+      </div>
+    </div>
+
+    <!-- ImgBB (optional) -->
+    <div class="card">
+      <div class="section-title">ImgBB — optional</div>
+      <div class="field">
+        <label>API Key</label>
+        <input type="text" id="f-imgbb-key" placeholder="Your ImgBB API key">
+        <div class="hint">Required for uploading images. Found at imgbb.com → API.</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="status" id="status"></div>
+      <button class="btn btn-ghost" id="btnCancel">Cancel</button>
+      <button class="btn btn-primary" id="btnSubmit">Connect &amp; Launch</button>
+    </div>
+
+  </div>
+
+  <script>
+    let pickedCredsContent = null
+
+    const statusEl = document.getElementById('status')
+    function setStatus(msg, type = '') {
+      statusEl.textContent = msg
+      statusEl.className = 'status' + (type ? ' ' + type : '')
+    }
+
+    document.getElementById('btnPickCreds').addEventListener('click', async () => {
+      const result = await window.newdb.pickCredsFile()
+      if (!result) return
+      pickedCredsContent = result.content
+      document.getElementById('f-creds-label').textContent = result.name
+      document.getElementById('f-creds-label').classList.add('loaded')
+    })
+
+    document.getElementById('btnCancel').addEventListener('click', () => {
+      window.newdb.cancel()
+    })
+
+    document.getElementById('btnSubmit').addEventListener('click', async () => {
+      const url    = document.getElementById('f-supabase-url').value.trim()
+      const key    = document.getElementById('f-supabase-key').value.trim()
+      const sheetId = document.getElementById('f-sheet-id').value.trim()
+      const imgbb  = document.getElementById('f-imgbb-key').value.trim()
+
+      if (!url || !key) {
+        setStatus('Supabase URL and Anon Key are required.', 'error')
+        document.getElementById('f-supabase-url').focus()
+        return
+      }
+
+      if (!url.startsWith('https://')) {
+        setStatus('Supabase URL must start with https://', 'error')
+        return
+      }
+
+      document.getElementById('btnSubmit').disabled = true
+      setStatus('Connecting…')
+
+      let googleCreds = null
+      if (pickedCredsContent) {
+        try { googleCreds = JSON.parse(pickedCredsContent) }
+        catch { setStatus('credentials.json is not valid JSON.', 'error'); document.getElementById('btnSubmit').disabled = false; return }
+      }
+
+      const result = await window.newdb.submit({
+        supabase_url:      url,
+        supabase_anon_key: key,
+        google_sheet_id:   sheetId,
+        google_credentials: googleCreds,
+        imgbb_api_key:     imgbb,
+      })
+
+      if (result?.ok) {
+        setStatus('Launching Hormiga…', 'good')
+      } else {
+        setStatus(result?.error || 'Something went wrong.', 'error')
+        document.getElementById('btnSubmit').disabled = false
+      }
+    })
+  </script>
+</body>
+</html>

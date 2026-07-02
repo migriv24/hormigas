@@ -1,0 +1,247 @@
+<div class="help-tab">
+  <div class="settings-header">
+    <div>
+      <h1 class="settings-title">About &amp; Help</h1>
+      <div style="font-size:12px;color:var(--text-muted);">Hormiga &nbsp;·&nbsp; <span id="aboutVersionLabel">v—</span> &nbsp;·&nbsp; for LON</div>
+    </div>
+  </div>
+
+  <div class="settings-body">
+
+    <!-- ── About ──────────────────────────────────────────────────────────── -->
+    <div class="settings-card" style="background:linear-gradient(135deg,#eff6ff 0%,#f0fdf4 100%);border-color:#bfdbfe;">
+      <div style="display:flex;align-items:flex-start;gap:16px;">
+        <img src="/static/assets/hormiga.png" alt="Hormiga" style="width:48px;height:48px;border-radius:10px;background:#fff;padding:6px;object-fit:contain;flex-shrink:0;">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:#1e3a5f;margin-bottom:4px;">Hormiga</div>
+          <div style="font-size:13px;color:#374151;line-height:1.6;">
+            A bilingual content management and publishing platform built for the
+            <strong>Latine Outreach Network (LON)</strong>. Manages contacts, events, organizations,
+            images, and job postings — and assembles them into bilingual HTML newsletters.
+            Built around <strong>The Antfarm</strong>: a node-based protocol system that keeps
+            every backend swappable — local or cloud, your choice.
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;">Python + Flask</span>
+            <span style="background:#dcfce7;color:#166534;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;">Electron</span>
+            <span style="background:#dcfce7;color:#166534;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;">Local-first</span>
+            <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;">The Antfarm</span>
+            <span style="background:#f3e8ff;color:#6b21a8;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;">Bilingual EN/ES</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Quick Reference Buttons ───────────────────────────────────────── -->
+    <div class="settings-card">
+      <div class="settings-card-title">Quick Reference</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:4px;">
+        <a class="help-quick-btn" href="#help-search">🔍 Search Syntax</a>
+        <a class="help-quick-btn" href="#help-tags">🏷 Tag Filter Syntax</a>
+        <a class="help-quick-btn" href="#help-data">📋 Data Manager</a>
+        <a class="help-quick-btn" href="#help-builder">📰 Newsletter Builder</a>
+        <a class="help-quick-btn" href="#help-images">🖼 Images &amp; Fliers</a>
+        <a class="help-quick-btn" href="#help-connections">🔗 Connections</a>
+        <a class="help-quick-btn" href="#help-shortcuts">⌨ Shortcuts</a>
+        <a class="help-quick-btn" href="#help-changelog">📝 Changelog</a>
+      </div>
+    </div>
+
+    <!-- ── Search Syntax ─────────────────────────────────────────────────── -->
+    <div class="settings-card" id="help-search">
+      <div class="settings-card-title">🔍 Search Bar Syntax</div>
+      <div class="field-hint" style="margin-bottom:12px;">
+        Applies to Data Manager, Images, and Connections search fields.
+      </div>
+      <table class="help-table">
+        <thead><tr><th>Syntax</th><th>Meaning</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><code>word</code></td><td>Match anywhere in name / label (case-insensitive)</td><td><code>maria</code></td></tr>
+          <tr><td><code>"exact phrase"</code></td><td>Match exact phrase with spaces</td><td><code>"lane county"</code></td></tr>
+          <tr><td><code>#tag</code></td><td>Filter by tag</td><td><code>#march</code></td></tr>
+          <tr><td><code>+word</code></td><td>Must include (AND)</td><td><code>+march +board</code></td></tr>
+          <tr><td><code>-word</code></td><td>Must exclude</td><td><code>-vip</code></td></tr>
+          <tr><td><code>org:name</code></td><td>Filter by organization (contacts)</td><td><code>org:connected</code></td></tr>
+          <tr><td><code>email:word</code></td><td>Filter by email address</td><td><code>email:gmail</code></td></tr>
+          <tr><td><code>tag:name</code></td><td>Explicit tag filter (same as #tag)</td><td><code>tag:service</code></td></tr>
+        </tbody>
+      </table>
+      <div class="field-hint" style="margin-top:10px;">
+        Combine operators freely: <code>maria #board -vip</code> — finds Maria, tagged board, excluding vip.
+      </div>
+    </div>
+
+    <!-- ── Tag Filter Syntax ─────────────────────────────────────────────── -->
+    <div class="settings-card" id="help-tags">
+      <div class="settings-card-title">🏷 Image Tag Filter Syntax</div>
+      <div class="field-hint" style="margin-bottom:12px;">
+        Used in the Newsletter Builder's <strong>Flyer Grid</strong> section and in the Images tab filter.
+      </div>
+      <table class="help-table">
+        <thead><tr><th>Syntax</th><th>Meaning</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><code>march</code></td><td>OR — image has this tag</td><td><code>march</code></td></tr>
+          <tr><td><code>march,april</code></td><td>OR — image has "march" OR "april"</td><td><code>march,april</code></td></tr>
+          <tr><td><code>+march +board</code></td><td>AND — image must have BOTH tags</td><td><code>+march +board</code></td></tr>
+          <tr><td><code>-draft</code></td><td>Exclude — image must NOT have this tag</td><td><code>march -draft</code></td></tr>
+        </tbody>
+      </table>
+      <div class="field-hint" style="margin-top:10px;">
+        When you load flyers by tag in the builder, paired EN/ES images are both loaded and the correct
+        language version is selected automatically based on the newsletter language setting.
+      </div>
+    </div>
+
+    <!-- ── Data Manager ──────────────────────────────────────────────────── -->
+    <div class="settings-card" id="help-data">
+      <div class="settings-card-title">📋 Data Manager</div>
+      <ul class="help-list">
+        <li><strong>Contacts</strong> — people from the Google Sheet. Click any row to edit name, org, email, and tags. Tags are local-only (not written back to Sheet).</li>
+        <li><strong>Events</strong> — upcoming events from the Sheet. Each event can have tags and a custom icon set locally.</li>
+        <li><strong>Presenters</strong> — presenter sign-up data from the Sheet.</li>
+        <li><strong>Organizations</strong> — detected or manually created. Use <strong>⚡ Merge…</strong> to combine duplicate entries — select two rows and confirm which name to keep.</li>
+        <li><strong>↺ Sync</strong> (sidebar) — re-fetches all Sheets data and clears the local cache. Run this after editing the spreadsheet directly.</li>
+        <li><strong>Undo / Redo</strong> — undoes edits made through the app. Does not undo direct edits in Google Sheets.</li>
+      </ul>
+    </div>
+
+    <!-- ── Newsletter Builder ────────────────────────────────────────────── -->
+    <div class="settings-card" id="help-builder">
+      <div class="settings-card-title">📰 Newsletter Builder</div>
+      <ul class="help-list">
+        <li><strong>Sections palette</strong> (left panel) — drag onto the canvas to add, or double-click to append. Use <strong>☰</strong> to collapse.</li>
+        <li><strong>Canvas</strong> (center) — your newsletter layout. Drag the <strong>⠿</strong> handle to reorder cards (drop on top half = above, bottom half = below).</li>
+        <li><strong>Section editor</strong> (right panel) — edit the selected section. Use <strong>⚙</strong> to collapse. For <strong>Narrative</strong> sections, the <strong>Customize</strong> button opens a full rich text editor.</li>
+        <li><strong>Preview</strong> — renders the full newsletter. Export downloads EN + ES HTML files.</li>
+        <li><strong>Language</strong> — set to Español before export to auto-translate all text fields.</li>
+        <li><strong>Projects</strong> — save and reopen canvas layouts from <code>data/projects/</code>.</li>
+      </ul>
+      <div class="settings-card-title" style="margin-top:16px;font-size:13px;">Section types</div>
+      <table class="help-table">
+        <thead><tr><th>Section</th><th>Domain</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>🖼 Hero</td><td>Content</td><td>Opening image with title and body paragraphs</td></tr>
+          <tr><td>📋 Meeting Highlights</td><td>Content</td><td>Bullet list of key meeting points</td></tr>
+          <tr><td>📝 Narrative</td><td>Content</td><td>Icon + title + rich body text with optional callout blocks</td></tr>
+          <tr><td>✅ Actions for Network</td><td>Content</td><td>Numbered list of action items</td></tr>
+          <tr><td>📅 Event Grid</td><td>Data</td><td>Grid of events pulled from the Sheet</td></tr>
+          <tr><td>📌 Highlight Event</td><td>Data</td><td>Single featured event with icon, date, and CTA</td></tr>
+          <tr><td>👥 People in the Room</td><td>Data</td><td>Attendance list from contacts</td></tr>
+          <tr><td>🖼 Image Gallery</td><td>Data</td><td>Image grid filtered by tag — shows correct EN/ES version</td></tr>
+          <tr><td>🎤 Present at a Meeting</td><td>Data</td><td>Speaker recruitment with contact headshots</td></tr>
+          <tr><td>📂 Directory CTA</td><td>Meta</td><td>Button linking to the network directory</td></tr>
+          <tr><td>📧 Footer</td><td>Meta</td><td>Email footer from Settings</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Images & Fliers ────────────────────────────────────────────────── -->
+    <div class="settings-card" id="help-images">
+      <div class="settings-card-title">🖼 Images &amp; Fliers</div>
+      <ul class="help-list">
+        <li><strong>Upload</strong> — images are hosted on ImgBB. The URL is saved locally in <code>data/images.json</code>.</li>
+        <li><strong>Tags</strong> — add tags to any image for filtering. Use the tag filter in the builder to load sets of images.</li>
+        <li><strong>Language pairing</strong> — mark an image as <strong>EN</strong> or <strong>ES</strong> and then use <strong>Pair</strong> to link the two versions. When the builder loads flyers by tag, it picks the version that matches the newsletter language automatically.</li>
+        <li><strong>Event linking</strong> — link an image (e.g. a flier) to an event using the calendar badge on the image card. Linked images appear in the event's detail view.</li>
+        <li><strong>📅 badge</strong> — shown on image cards that are linked to at least one event. Click the badge to view or edit the linked event.</li>
+      </ul>
+    </div>
+
+    <!-- ── Connections Manager ───────────────────────────────────────────── -->
+    <div class="settings-card" id="help-connections">
+      <div class="settings-card-title">🔗 Connections Manager</div>
+      <ul class="help-list">
+        <li><strong>↻ Sync Sheet</strong> — imports People, Orgs, Events, and Images as graph nodes. Run after adding new data to any tab.</li>
+        <li><strong>Entity list</strong> — filter by type (People, Orgs, Events, Images, Tags). Click any row to see details and connections.</li>
+        <li><strong>Tags filter</strong> — shows graph tag nodes. Assign tags to entities from the detail panel.</li>
+        <li><strong>⚙ Tag Manager</strong> — shows ALL tags across every system (images, events, contacts). Click a tag to preview which entities use it. Rename or delete tags with cascade.</li>
+        <li><strong>Add connection</strong> — link any two entities with a named relation. The target field autocompletes from all known graph entities.</li>
+        <li><span style="background:#fee2e2;color:#dc2626;font-size:11px;padding:2px 6px;border-radius:4px;font-weight:600;">stale</span> badge — entity was removed from the Sheet but its graph connections are preserved.</li>
+      </ul>
+    </div>
+
+    <!-- ── Keyboard Shortcuts ─────────────────────────────────────────────── -->
+    <div class="settings-card" id="help-shortcuts">
+      <div class="settings-card-title">⌨ Keyboard Shortcuts</div>
+      <table class="help-table">
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><kbd>Enter</kbd> or <kbd>,</kbd></td><td>Confirm tag while typing in a tag field</td></tr>
+          <tr><td><kbd>Escape</kbd></td><td>Close the active modal dialog</td></tr>
+          <tr><td>Double-click palette item</td><td>Append section to builder canvas</td></tr>
+          <tr><td>Drag palette item → canvas</td><td>Add section at drop position</td></tr>
+          <tr><td>Drag canvas card ⠿ handle</td><td>Reorder section (drop on top/bottom half of target)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── On the Horizon ────────────────────────────────────────────────── -->
+    <div class="settings-card" id="help-horizon">
+      <div class="settings-card-title">🔭 On the Horizon</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">
+        These features are ideas under active consideration — not yet in development.
+        Current focus is <strong>The Antfarm</strong> (local-first protocol node system).
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;">
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">🧱 Hormiga Studio</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Block-based newsletter builder — assemble content by stacking blocks like Scratch, replacing the current section form editor.</div>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">🏔 Mound</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Static site builder — generate a public-facing website from your org's data and deploy it via an Antfarm output node.</div>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">📓 The Nest</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Obsidian-style connected notes wired into the tag and entity systems — notes can reference contacts, events, and orgs directly.</div>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">👑 The Queen</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">LLM protocol node — connect a cloud model (Claude, GPT) or a local model (Ollama) to analyze notes and draft newsletter content.</div>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">🗺 Territory</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Geospatial layer — associate contacts, events, and incidents with map coordinates. Enables location-aware personalized newsletters.</div>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">📬 The Courier</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Newsletter dispatch — send personalized emails to your contact list directly from Hormiga via a transactional email Antfarm node.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Changelog ──────────────────────────────────────────────────────── -->
+    <div class="settings-card" id="help-changelog">
+      <div class="settings-card-title">📝 Changelog</div>
+      <table class="help-table">
+        <thead><tr><th style="width:80px;">Version</th><th>Changes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong id="changelogCurrentVersion">v—</strong></td>
+            <td>Supabase REST API replaces direct PostgreSQL · All data stores (images, jobs, tags, graph, metadata) sync to cloud · Three-tier storage model active · Export .miga from Settings · Version display fixes</td>
+          </tr>
+          <tr>
+            <td>v1.0.1</td>
+            <td><strong>.miga credential file</strong> · AES-256-GCM encrypted credential bundles · Landing page when no credentials on disk · Export flow · Auto-updater with Minecraft-style splash messages</td>
+          </tr>
+          <tr>
+            <td>v1.0.0</td>
+            <td><strong>First major release</strong> · Rebranded to Hormiga · Supabase PostgreSQL backend · Pull-sheet sync with editorial diff · Jobs feature · Connections Manager · Graph store · Tag Manager · Image↔Event linking · Newsletter Builder · Organizations tab</td>
+          </tr>
+          <tr>
+            <td>v0.1.x</td>
+            <td>Initial scaffold — Data Manager · Google Sheets sync · ImgBB image hosting · Dynamic port · Splash screen · File-based port handoff</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

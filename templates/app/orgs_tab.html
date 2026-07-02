@@ -1,0 +1,89 @@
+<div class="orgs-tab">
+
+  <!-- Toolbar -->
+  <div class="panel-toolbar orgs-toolbar">
+    <div>
+      <div style="font-size:17px;font-weight:700;">Organizations</div>
+      <div style="font-size:12px;color:var(--text-muted);">Managed in the Organizations sheet — each org must have a primary contact</div>
+    </div>
+    <span class="record-count" id="orgCount"></span>
+    <button class="btn btn-outline btn-sm" id="orgDetectBtn">🔍 Detect &amp; Import</button>
+    <button class="btn btn-outline btn-sm" id="orgMergeSelectBtn">⚡ Merge…</button>
+    <button class="btn btn-primary btn-sm" id="addOrgBtn">+ Add Organization</button>
+  </div>
+  <!-- Merge mode banner — separate from toolbar so it renders as a full-width row -->
+  <div id="orgMergeBanner" class="org-merge-banner hidden">
+    <span id="orgMergeMsg">Select 2 organizations to merge</span>
+    <button class="btn btn-sm btn-primary" id="orgMergeBtn" disabled>⚡ Merge Selected</button>
+    <button class="btn btn-sm btn-ghost" id="orgMergeCancelBtn">Cancel</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper" style="flex:1;overflow-y:auto;">
+    <table class="data-table" id="orgsTable">
+      <thead>
+        <tr>
+          <th id="orgSelectHeader" class="hidden" style="width:36px;"></th>
+          <th>Name</th>
+          <th>Abbrev.</th>
+          <th>Alternate Name</th>
+          <th>Primary Contact</th>
+          <th>Email</th>
+          <th>Website</th>
+          <th>Location</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="orgsBody">
+        <tr><td colspan="9" class="loading">Loading organizations…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ── Add/Edit Org Modal ── -->
+<div id="orgModal" class="modal-overlay hidden">
+  <div class="modal-box" style="width:540px;">
+    <div class="modal-header">
+      <h2 id="orgModalTitle">Add Organization</h2>
+      <button class="modal-close" id="orgModalClose">✕</button>
+    </div>
+    <div class="modal-body" id="orgModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="orgModalCancel">Cancel</button>
+      <button class="btn btn-primary" id="orgModalSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Detection Wizard Modal ── -->
+<div id="orgWizard" class="modal-overlay hidden">
+  <div class="modal-box org-wizard-box">
+    <div class="modal-header">
+      <div>
+        <h2 id="wizardTitle">Detect Organizations</h2>
+        <div class="wizard-steps-bar">
+          <span class="wizard-step-dot active" data-step="1">1</span>
+          <span class="wizard-step-line"></span>
+          <span class="wizard-step-dot" data-step="2">2</span>
+          <span class="wizard-step-line"></span>
+          <span class="wizard-step-dot" data-step="3">3</span>
+          <span class="wizard-step-line"></span>
+          <span class="wizard-step-dot" data-step="4">4</span>
+        </div>
+      </div>
+      <button class="modal-close" id="wizardClose">✕</button>
+    </div>
+    <div id="wizardBody" class="wizard-body">
+      <div style="text-align:center;padding:40px;color:var(--text-muted);">Loading…</div>
+    </div>
+    <div class="modal-footer" id="wizardFooter">
+      <button class="btn btn-ghost" id="wizardBackBtn" style="display:none;">← Back</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-ghost" id="wizardCancelBtn">Cancel</button>
+      <button class="btn btn-ghost" id="wizardSkipBtn" style="display:none;color:#b91c1c;border-color:#fca5a5;">Continue anyway →</button>
+      <button class="btn btn-primary" id="wizardNextBtn">Next →</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+{
+  "name": "hormiga",
+  "version": "1.4.15",
+  "description": "Newsletter builder and data manager for community organizations",
+  "main": "electron/main.js",
+  "author": "Miguel Rivas",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build:python": "pyinstaller hormiga.spec --clean --distpath dist",
+    "build": "npm run build:python && electron-builder",
+    "build:win": "npm run build:python && electron-builder --win",
+    "build:mac": "npm run build:python && electron-builder --mac",
+    "build:linux": "npm run build:python && electron-builder --linux",
+    "release": "electron-builder --publish always",
+    "bump:patch": "npm version patch -m \"v%s\" && git push && git push --tags",
+    "bump:minor": "npm version minor -m \"v%s\" && git push && git push --tags"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.4"
+  },
+  "build": {
+    "appId": "com.hormiga.app",
+    "productName": "Hormiga",
+    "copyright": "Copyright © 2026 Miguel Rivas",
+    "directories": {
+      "output": "out",
+      "buildResources": "assets"
+    },
+    "files": [
+      "electron/**/*",
+      "assets/icons/icon.png",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist/",
+        "to": ".",
+        "filter": [
+          "hormiga-server",
+          "hormiga-server.exe"
+        ]
+      }
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "migriv24",
+      "repo": "hormiga-releases"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icons/icon.ico"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "assets/icons/icon.icns",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icons/icon.png",
+      "category": "Office"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "warningsAsErrors": false,
+      "include": "build/installer.nsh"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
+  }
+}

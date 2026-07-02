@@ -1,0 +1,81 @@
+REDWOOD_PLAN.md
+
+# ── Credentials & secrets ─────────────────────────────────────────────────────
+credentials.json
+settings.json
+*.env
+.env*
+electron/app_secret.local.js
+
+# ── Private local materials — NEVER public (exports, member data, meeting mats) ─
+local/
+
+# ── Runtime-generated data files (local state, not source) ───────────────────
+data/server_config.json
+data/user_profile.json
+data/contacts_meta.json
+data/events_meta.json
+data/presenter_meta.json
+data/images.json
+data/graph.json
+data/jobs.json
+data/tags.json
+data/projects/*.json
+data/templates/*.json
+data/resources.json
+
+# Backups (may contain full DB dumps with image delete-URLs)
+backups/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+.Python
+
+# PyInstaller output
+dist/
+# PyInstaller intermediate build cache (specific subfolder, not all of build/)
+build/hormiga/
+build/hormiga-server/
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── Electron / Node ───────────────────────────────────────────────────────────
+node_modules/
+out/
+
+# ── Hormiga credential & project files ───────────────────────────────────────
+*.hormiga
+*.hormiga-newsletter
+
+# ── Exported newsletter HTML & spreadsheets ───────────────────────────────────
+# Ignore root-level HTML exports but keep electron/ app HTML
+*.html
+!electron/*.html
+!templates/**/*.html
+*.xlsx
+
+# ── Cloudflared binaries ──────────────────────────────────────────────────────
+cloudflared
+cloudflared.exe
+
+# ── Claude Code ───────────────────────────────────────────────────────────────
+.claude/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# Flutter mobile (abandoned — see flutter-mobile branch)
+mobile/
+
+# Uploaded resource files (PDFs, etc.)
+data/resources/*
+!data/resources/.gitkeep

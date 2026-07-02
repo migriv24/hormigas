@@ -1,0 +1,23 @@
+<tr>
+  <td style="padding:16px 6px 32px 6px;font-family:Arial,Helvetica,sans-serif;
+             color:#6b7280;font-size:12px;line-height:1.6;
+             border-top:1px solid #e5e7eb;">
+    <div>
+      {% if lang == 'es' %}
+        Redactado por {{ settings.newsletter_defaults.author_name }} para la
+        {{ settings.newsletter_defaults.org_name }}.
+        Responda con ediciones, adiciones o correcciones.
+      {% else %}
+        Drafted by {{ settings.newsletter_defaults.author_name }} for the
+        {{ settings.newsletter_defaults.org_name }}.
+        Reply with edits, additions, or corrections.
+      {% endif %}
+      <a href="mailto:{{ settings.newsletter_defaults.author_email }}"
+         style="color:#0f766e;">{{ settings.newsletter_defaults.author_email }}</a>
+    </div>
+    <div style="margin-top:6px;">
+      {% if lang == 'es' %}Correo grupal{% else %}Group email{% endif %}:
+      <strong>{{ settings.newsletter_defaults.group_email }}</strong>
+    </div>
+  </td>
+</tr>

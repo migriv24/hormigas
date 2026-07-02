@@ -1,0 +1,47 @@
+<div class="jobs-tab">
+
+  <!-- Toolbar -->
+  <div class="panel-toolbar">
+    <div>
+      <div style="font-size:17px;font-weight:700;">Job Opportunities</div>
+      <div style="font-size:12px;color:var(--text-muted);">Manage hiring opportunities — add them to newsletters with a Job Grid section</div>
+    </div>
+    <span class="record-count" id="jobCount"></span>
+    <div style="display:flex;gap:6px;align-items:center;margin-left:auto;">
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text-muted);cursor:pointer;">
+        <input type="checkbox" id="jobShowArchived"> Show archived
+      </label>
+      <button class="btn btn-primary btn-sm" id="jobAddBtn">+ Add Job</button>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="img-filter-bar" id="jobFilterBar">
+    <input type="search" id="jobSearchInput" placeholder="Search title, org, or tag…" autocomplete="off">
+    <div id="jobTagFilterChips" class="img-filter-chips"></div>
+    <button id="jobFilterClear" class="btn btn-sm btn-ghost" style="display:none;white-space:nowrap;">✕ Clear</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper" style="flex:1;overflow-y:auto;">
+    <table class="data-table" id="jobsTable">
+      <thead>
+        <tr>
+          <th style="width:36px;"></th>
+          <th>Title</th>
+          <th>Organization</th>
+          <th>Type</th>
+          <th>Pay</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Deadline</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="jobsBody">
+        <tr><td colspan="9" class="loading">Loading jobs…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

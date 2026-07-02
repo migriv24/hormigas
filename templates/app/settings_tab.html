@@ -1,0 +1,356 @@
+<div class="settings-tab">
+  <div class="settings-header">
+    <h1 class="settings-title">Settings</h1>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-outline" id="settingsReloadBtn">↺ Reload from file</button>
+      <button class="btn btn-primary" id="settingsSaveBtn">Save Settings</button>
+    </div>
+  </div>
+
+  <div class="settings-body">
+
+    <!-- ── Appearance ───────────────────────────────────────────────────── -->
+    <div class="settings-card">
+      <div class="settings-card-title">Appearance</div>
+      <div class="field-hint" style="margin-bottom:14px;">Choose a color theme. Saved locally in your browser.</div>
+      <div class="theme-swatches" id="theme-swatches">
+
+        <button class="theme-swatch" data-theme="default" onclick="applyTheme('default')">
+          <div class="theme-swatch-preview">
+            <div class="theme-swatch-bar" style="background:#1e293b;">
+              <div class="theme-swatch-bar-dot" style="background:#0f766e;"></div>
+              <div class="theme-swatch-bar-dot" style="background:#334155;"></div>
+              <div class="theme-swatch-bar-dot" style="background:#334155;"></div>
+            </div>
+            <div class="theme-swatch-body-area" style="background:#f8fafc;">
+              <div class="theme-swatch-accent-bar" style="background:#0f766e;"></div>
+              <div class="theme-swatch-line" style="background:#1e293b;width:80%;"></div>
+              <div class="theme-swatch-line" style="background:#1e293b;width:60%;"></div>
+            </div>
+          </div>
+          <div class="theme-swatch-name">Ocean</div>
+        </button>
+
+        <button class="theme-swatch" data-theme="rouge" onclick="applyTheme('rouge')">
+          <div class="theme-swatch-preview">
+            <div class="theme-swatch-bar" style="background:#14110F;">
+              <div class="theme-swatch-bar-dot" style="background:#A4031F;"></div>
+              <div class="theme-swatch-bar-dot" style="background:#2e2a27;"></div>
+              <div class="theme-swatch-bar-dot" style="background:#2e2a27;"></div>
+            </div>
+            <div class="theme-swatch-body-area" style="background:#f5f4f3;">
+              <div class="theme-swatch-accent-bar" style="background:#A4031F;"></div>
+              <div class="theme-swatch-line" style="background:#14110F;width:80%;"></div>
+              <div class="theme-swatch-line" style="background:#14110F;width:60%;"></div>
+            </div>
+          </div>
+          <div class="theme-swatch-name">Rouge</div>
+        </button>
+
+        <button class="theme-swatch" data-theme="antfarm" onclick="applyTheme('antfarm')">
+          <div class="theme-swatch-preview">
+            <div class="theme-swatch-bar" style="background:#1a0a0a;">
+              <div class="theme-swatch-bar-dot" style="background:#b91c1c;"></div>
+              <div class="theme-swatch-bar-dot" style="background:#3d1515;"></div>
+              <div class="theme-swatch-bar-dot" style="background:#3d1515;"></div>
+            </div>
+            <div class="theme-swatch-body-area" style="background:#faf8f7;">
+              <div class="theme-swatch-accent-bar" style="background:#b91c1c;"></div>
+              <div class="theme-swatch-line" style="background:#1c0e0e;width:80%;"></div>
+              <div class="theme-swatch-line" style="background:#1c0e0e;width:60%;"></div>
+            </div>
+          </div>
+          <div class="theme-swatch-name">Antfarm</div>
+        </button>
+
+        <button class="theme-swatch" data-theme="blocks" onclick="applyTheme('blocks')">
+          <div class="theme-swatch-preview">
+            <div class="theme-swatch-bar" style="background:#0f172a;">
+              <div class="theme-swatch-bar-dot" style="background:#1d4ed8;"></div>
+              <div class="theme-swatch-bar-dot" style="background:#1e3050;"></div>
+              <div class="theme-swatch-bar-dot" style="background:#1e3050;"></div>
+            </div>
+            <div class="theme-swatch-body-area" style="background:#f7f8fc;">
+              <div class="theme-swatch-accent-bar" style="background:#1d4ed8;"></div>
+              <div class="theme-swatch-line" style="background:#0f172a;width:80%;"></div>
+              <div class="theme-swatch-line" style="background:#0f172a;width:60%;"></div>
+            </div>
+          </div>
+          <div class="theme-swatch-name">Blocks</div>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ── Your Profile ─────────────────────────────────────────────────── -->
+    <div class="settings-card" id="settings-profile-card">
+      <div class="settings-card-title">Your Profile</div>
+      <div class="settings-profile-row">
+        <div class="settings-profile-avatar" id="s-profile-avatar">?</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="s-profile-display">—</div>
+          <div style="font-size:11px;color:var(--text-muted);" id="s-profile-sub">Not set up yet</div>
+        </div>
+        <button class="btn btn-sm btn-outline" id="s-profile-edit-btn">Edit</button>
+      </div>
+      <!-- Inline edit form -->
+      <div id="s-profile-form" class="hidden" style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
+        <div class="form-field">
+          <label>Display Name</label>
+          <input type="text" id="s-profile-name" placeholder="e.g. Miguel Rivas">
+        </div>
+        <div class="form-field">
+          <label>Username</label>
+          <input type="text" id="s-profile-username" placeholder="e.g. miguelr">
+          <div class="field-hint">Used to identify you within this app.</div>
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" id="s-profile-email" placeholder="your@email.com">
+        </div>
+        <div class="form-field">
+          <label>Link to Directory Contact</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" id="s-profile-contact-search" placeholder="Search contacts by name or email…" style="flex:1;">
+            <button class="btn btn-sm btn-ghost" id="s-profile-contact-clear" data-tooltip="Remove link">✕</button>
+          </div>
+          <div id="s-profile-contact-results" style="margin-top:4px;"></div>
+          <div class="field-hint">Link yourself to the directory so your info stays in sync with the sheet.</div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
+          <button class="btn btn-sm btn-ghost" id="s-profile-cancel-btn">Cancel</button>
+          <button class="btn btn-sm btn-primary" id="s-profile-save-btn">Save Profile</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Google Sheets ─────────────────────────────────────────────────── -->
+    <div class="settings-card">
+      <div class="settings-card-title">Google Sheets</div>
+      <div class="form-field">
+        <label>Spreadsheet ID</label>
+        <input type="text" id="s-sheet-id" placeholder="14B6YDm...">
+        <div class="field-hint">The long ID from your Google Sheets URL.</div>
+      </div>
+      <div class="form-field">
+        <label>Credentials File Path</label>
+        <input type="text" id="s-creds-path" placeholder="credentials.json">
+        <div class="field-hint">Relative to the project root. Usually credentials.json.</div>
+      </div>
+    </div>
+
+    <!-- ── ImgBB ─────────────────────────────────────────────────────────── -->
+    <div class="settings-card">
+      <div class="settings-card-title">ImgBB Image Hosting</div>
+      <div class="form-field">
+        <label>API Key</label>
+        <input type="text" id="s-imgbb-key" placeholder="Your ImgBB API key">
+        <div class="field-hint">Found at imgbb.com → API. Required for image uploads.</div>
+      </div>
+    </div>
+
+    <!-- ── Newsletter Defaults ───────────────────────────────────────────── -->
+    <div class="settings-card">
+      <div class="settings-card-title">Newsletter Defaults</div>
+      <div class="form-field">
+        <label>Organization Name</label>
+        <input type="text" id="s-org-name">
+      </div>
+      <div class="form-field">
+        <label>Group Email</label>
+        <input type="email" id="s-group-email">
+      </div>
+      <div class="form-field">
+        <label>Host Location</label>
+        <input type="text" id="s-host-location" placeholder="e.g. Connected Lane County">
+      </div>
+      <div class="form-field">
+        <label>Author Name</label>
+        <input type="text" id="s-author-name">
+      </div>
+      <div class="form-field">
+        <label>Author Email</label>
+        <input type="email" id="s-author-email">
+      </div>
+      <div class="form-field">
+        <label>Directory URL</label>
+        <input type="text" id="s-directory-url">
+      </div>
+      <div class="form-field">
+        <label>Events URL</label>
+        <input type="text" id="s-events-url">
+      </div>
+      <div class="form-field">
+        <label>Presenter Signup URL</label>
+        <input type="text" id="s-presenter-url">
+      </div>
+    </div>
+
+    <!-- ── Tag Highlights ────────────────────────────────────────────────── -->
+    <div class="settings-card">
+      <div class="settings-card-title">Tag Highlights</div>
+      <div class="field-hint" style="margin-bottom:14px;">Glow / outline applied behind image and resource cards based on their tags. Rules are shared across both tabs.</div>
+
+      <div class="form-field" style="margin-bottom:12px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="s-highlights-enabled">
+          Enable tag highlights
+        </label>
+      </div>
+
+      <!-- Existing rules list (JS-rendered) -->
+      <div id="s-highlights-rules" style="margin-bottom:12px;display:flex;flex-direction:column;gap:6px;"></div>
+
+      <!-- Add rule row -->
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+        <input type="text" id="s-hl-new-tag" placeholder="tag name" style="width:110px;">
+        <select id="s-hl-new-mode" onchange="sHlToggleAddColors()">
+          <option value="solid">Solid color</option>
+          <option value="event_linked" selected>Event-linked</option>
+          <option value="frequency">Frequency gradient</option>
+        </select>
+        <span id="s-hl-add-colors" style="display:flex;gap:6px;align-items:center;">
+          <input type="color" id="s-hl-new-color1" value="#fed7aa" title="Unlinked / min color">
+          <input type="color" id="s-hl-new-color2" value="#f97316" title="Linked / max color">
+        </span>
+        <button class="btn btn-sm btn-outline" onclick="sHlAddRule()">+ Add rule</button>
+      </div>
+
+      <!-- Fallback colors -->
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        <div class="form-field" style="margin-bottom:0;">
+          <label>No-tag color</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="color" id="s-hl-notag-color" value="#9ca3af">
+            <span class="field-hint" style="margin:0;">Images with no tags</span>
+          </div>
+        </div>
+        <div class="form-field" style="margin-bottom:0;">
+          <label>Conflict color</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="color" id="s-hl-conflict-color" value="#3b82f6">
+            <span class="field-hint" style="margin:0;">Matches 2+ rules</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Newsletter Render ────────────────────────────────────────────────── -->
+    <div class="settings-card">
+      <div class="settings-card-title">Newsletter Render</div>
+      <div class="field-hint" style="margin-bottom:14px;">
+        Controls how the <strong>Render</strong> button builds newsletter output. Rendering only one language is faster
+        when translation is enabled; rendering both at once lets you toggle between EN and ES in the preview.
+      </div>
+      <div class="form-field">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="s-render-both-langs">
+          Render both languages at once
+        </label>
+        <div class="field-hint">
+          <strong>Off (default):</strong> Render builds only the selected language — fastest, especially with translation on.
+          Download Full Render will generate both languages when needed.<br>
+          <strong>On:</strong> Render always builds EN + ES together. Preview shows a language toggle.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── App Config ─────────────────────────────────────────────────────── -->
+    <div class="settings-card">
+      <div class="settings-card-title">App Config</div>
+      <div class="form-field">
+        <label>Port</label>
+        <input type="number" id="s-port" min="1024" max="65535">
+        <div class="field-hint">Restart the app for port changes to take effect.</div>
+      </div>
+      <div class="form-field">
+        <label>Log Level</label>
+        <select id="s-log-level">
+          <option value="DEBUG">DEBUG</option>
+          <option value="INFO">INFO</option>
+          <option value="WARNING">WARNING</option>
+          <option value="ERROR">ERROR</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Cache TTL (seconds)</label>
+        <input type="number" id="s-cache-ttl" min="30" max="3600">
+        <div class="field-hint">How long to cache Sheets data before re-fetching.</div>
+      </div>
+      <div class="form-field">
+        <label>Translation Provider</label>
+        <select id="s-translation">
+          <option value="google">Google Translate (free)</option>
+          <option value="claude">Claude AI (future)</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="s-auto-open">
+          Auto-open last database on startup
+        </label>
+        <div class="field-hint">
+          <strong>On (default):</strong> Hormiga opens your last database automatically.
+          <strong>Off:</strong> Always show the database picker on startup.
+        </div>
+      </div>
+      <div class="form-field" style="border-top:1px solid var(--border);padding-top:14px;margin-top:6px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="s-dev-mode">
+          Developer mode
+        </label>
+        <div class="field-hint">
+          Shows a Developer tab with browser console capture, server logs, and debug tools.
+          Safe to leave off unless you're debugging.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Credential File ────────────────────────────────────────────────── -->
+    <div class="settings-card" id="migaExportCard">
+      <div class="settings-card-title">Credential File (.miga)</div>
+      <div class="field-hint" style="margin-bottom:16px;">
+        Your <strong>.miga</strong> file bundles all credentials (Supabase, Google Sheets, ImgBB) into
+        one encrypted file. Share it with other LON team members to give them instant access.
+        You can optionally set a password — leave blank for no password protection.
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="exportMigaBtn" onclick="exportMigaFile()">
+          ⬇ Export .miga file
+        </button>
+        <span class="field-hint" id="exportMigaStatus" style="margin:0;"></span>
+      </div>
+    </div>
+
+    <!-- ── Data Storage ───────────────────────────────────────────────────── -->
+    <div class="settings-card">
+      <div class="settings-card-title">Data Storage</div>
+      <div class="field-hint" style="margin-bottom:14px;">Where your data lives. All three tiers are active.</div>
+
+      <div class="storage-tier storage-tier--active">
+        <div class="storage-tier-dot storage-tier-dot--shared"></div>
+        <div class="storage-tier-body">
+          <div class="storage-tier-name">Shared <span class="badge badge-green" style="font-size:10px;vertical-align:middle;">Supabase</span></div>
+          <div class="storage-tier-desc">Images, jobs, tags, graph, and metadata — synced across devices via your .miga database.</div>
+        </div>
+      </div>
+
+      <div class="storage-tier storage-tier--active">
+        <div class="storage-tier-dot storage-tier-dot--public"></div>
+        <div class="storage-tier-body">
+          <div class="storage-tier-name">Public <span class="badge badge-blue" style="font-size:10px;vertical-align:middle;">Google Sheets</span></div>
+          <div class="storage-tier-desc">Contacts, events, and organizations pulled live from the shared directory spreadsheet.</div>
+        </div>
+      </div>
+
+      <div class="storage-tier storage-tier--active">
+        <div class="storage-tier-dot storage-tier-dot--local"></div>
+        <div class="storage-tier-body">
+          <div class="storage-tier-name">Local <span class="badge" style="background:#f1f5f9;color:var(--text-muted);font-size:10px;vertical-align:middle;">This device</span></div>
+          <div class="storage-tier-desc">User preferences and app settings stored on this machine. Private notes and personal tags coming later.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

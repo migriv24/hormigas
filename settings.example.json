@@ -1,0 +1,17 @@
+{
+  "_comment": "Copy this file to settings.json and fill in your values. settings.json is gitignored.",
+  "google_credentials_path": "credentials.json",
+  "google_sheet_id": "YOUR_GOOGLE_SHEET_ID_HERE",
+  "imgbb_api_key": "YOUR_IMGBB_API_KEY_HERE",
+  "translate_api_key": "",
+  "newsletter_defaults": {
+    "author_name": "Your Name",
+    "author_email": "you@example.com",
+    "org_name": "Your Organization",
+    "group_email": "group@example.com"
+  },
+  "database": {
+    "_comment": "Set url to enable PostgreSQL. Leave empty to use Google Sheets only.",
+    "url": "postgresql://hormiga:hormiga_dev@localhost:5432/hormiga"
+  }
+}

@@ -1,0 +1,97 @@
+<tr>
+  <td style="background:#ffffff;border-radius:16px;padding:18px 20px;
+             box-shadow:0 8px 24px rgba(17,24,39,0.08);font-family:Arial,Helvetica,sans-serif;">
+
+    <div style="font-size:16px;font-weight:700;">
+      {{ title | default("Upcoming Events") }}
+    </div>
+    {% if subtitle %}
+    <div style="font-size:14px;line-height:1.6;color:#374151;margin-top:8px;">{{ subtitle }}</div>
+    {% endif %}
+
+    {% set col_count = columns | default(2) | int %}
+    {% set col_width = (100 / col_count) | int %}
+    {# Resolve display flags with safe defaults so old saved projects still render #}
+    {% set _show_org     = show_org     if show_org     is defined else true %}
+    {% set _show_time    = show_time    if show_time    is defined else true %}
+    {% set _show_address = show_address if show_address is defined else true %}
+    {% set _show_notes   = show_notes   if show_notes   is defined else true %}
+    {% set _compact      = compact_blocks if compact_blocks is defined else false %}
+    {# Compact mode: cap card body height so cards stay uniform #}
+    {% set _card_inner_style = "padding:12px;vertical-align:top;" + (" max-height:180px;overflow:hidden;" if _compact else "") %}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;">
+      <tbody>
+        {% set ns = namespace(col=0) %}
+        {% for event in events %}
+          {% if ns.col == 0 %}<tr>{% endif %}
+
+          <td width="{{ col_width }}%" valign="top" style="padding:6px;">
+            {% if event.link %}
+            <a href="{{ event.link }}" style="text-decoration:none;color:inherit;">
+            {% endif %}
+            <table width="100%" cellpadding="0" cellspacing="0"
+                   style="border:1px solid #e5e7eb;border-radius:12px;height:100%;">
+              <tbody><tr>
+                <td style="{{ _card_inner_style }}">
+                  {% if event.icon_url %}
+                  <img src="{{ event.icon_url }}" alt="" style="width:40px;display:block;margin-bottom:8px;">
+                  {% endif %}
+                  <div style="font-size:13px;font-weight:700;color:{{ event.color | default('#2563eb') }};">
+                    {{ event.date_label }}
+                  </div>
+                  <div style="font-size:14px;font-weight:700;margin-top:4px;">{{ event.title }}</div>
+                  {% if _show_org and event.org %}
+                  <div style="font-size:13px;color:#374151;">{{ event.org }}</div>
+                  {% endif %}
+                  {% if _show_time or _show_address %}
+                  <div style="font-size:13px;color:#374151;margin-top:6px;">
+                    {% if _show_time %}{{ event.time_range }}{% endif %}
+                    {% if _show_address and event.location %}
+                      {% if _show_time and event.time_range %}<br>{% endif %}
+                      {{ event.location }}
+                    {% endif %}
+                  </div>
+                  {% endif %}
+                  {% if _show_notes and event.description %}
+                  <div style="font-size:12px;color:#6b7280;margin-top:6px;line-height:1.5;">{{ event.description }}</div>
+                  {% endif %}
+                  {% if event.link and event.link_label %}
+                  <div style="font-size:12px;font-weight:700;color:{{ event.color | default('#2563eb') }};margin-top:6px;">
+                    {{ event.link_label }} →
+                  </div>
+                  {% endif %}
+                </td>
+              </tr></tbody>
+            </table>
+            {% if event.link %}</a>{% endif %}
+          </td>
+
+          {% set ns.col = ns.col + 1 %}
+          {% if ns.col == col_count %}
+            </tr>
+            {% set ns.col = 0 %}
+          {% endif %}
+        {% endfor %}
+
+        {# Pad incomplete last row #}
+        {% if ns.col > 0 %}
+          {% for _ in range(col_count - ns.col) %}
+            <td width="{{ col_width }}%" valign="top" style="padding:6px;"></td>
+          {% endfor %}
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    {% if cta_url %}
+    <div style="margin-top:14px;">
+      <a href="{{ cta_url }}" style="display:inline-block;background:#ea580c;color:#ffffff;
+           text-decoration:none;font-size:14px;font-weight:700;padding:12px 16px;border-radius:12px;">
+        {{ cta_label | default("View or Add Events") }}
+      </a>
+    </div>
+    {% endif %}
+
+  </td>
+</tr>

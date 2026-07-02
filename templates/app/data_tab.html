@@ -1,0 +1,135 @@
+<div class="data-tab">
+
+  <!-- Sub-tabs -->
+  <div class="subtab-bar">
+    <button class="subtab active" data-subtab="contacts">Contacts</button>
+    <button class="subtab" data-subtab="events">Events</button>
+    <button class="subtab" data-subtab="presenters">Presenters</button>
+  </div>
+
+  <!-- ── CONTACTS ── -->
+  <div id="subtab-contacts" class="subtab-panel active">
+    <div class="panel-toolbar">
+      <input type="search" id="contactSearch" class="search-input" placeholder="Search by name, org, or email…">
+      <button class="btn btn-primary btn-sm" id="addContactBtn">+ Add Contact</button>
+      <span class="record-count" id="contactCount"></span>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table" id="contactsTable">
+        <thead>
+          <tr>
+            <th style="width:36px;"></th>
+            <th><button class="th-sort" data-sort="name">Name <span class="sort-ind">↕</span></button></th>
+            <th><button class="th-sort" data-sort="organization">Organization <span class="sort-ind">↕</span></button></th>
+            <th><button class="th-sort" data-sort="title">Title <span class="sort-ind">↕</span></button></th>
+            <th><button class="th-sort" data-sort="email">Email <span class="sort-ind">↕</span></button></th>
+            <th>Phone</th>
+            <th>Newsletter</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="contactsBody">
+          <tr><td colspan="9" class="loading">Loading contacts…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── EVENTS ── -->
+  <div id="subtab-events" class="subtab-panel hidden">
+    <div class="panel-toolbar">
+      <div class="view-toggle-group">
+        <button class="btn btn-sm view-toggle-btn active" id="eventsCalBtn">📅 Calendar</button>
+        <button class="btn btn-sm view-toggle-btn" id="eventsListBtn">📋 List</button>
+      </div>
+      <button class="btn btn-primary btn-sm" id="addEventBtn">+ Add Event</button>
+      <span class="record-count" id="eventCount"></span>
+    </div>
+    <!-- Calendar container -->
+    <div id="eventsCalendarView" class="events-calendar-container">
+      <div style="color:var(--text-muted);text-align:center;padding:40px;">Loading events…</div>
+    </div>
+    <!-- List container -->
+    <div id="eventsListView" class="table-wrapper" style="display:none;">
+      <table class="data-table" id="eventsTable">
+        <thead>
+          <tr>
+            <th><button class="th-sort" data-sort-events="days">Day(s) <span class="sort-ind">↕</span></button></th>
+            <th><button class="th-sort" data-sort-events="title">Title <span class="sort-ind">↕</span></button></th>
+            <th><button class="th-sort" data-sort-events="organization">Organization <span class="sort-ind">↕</span></button></th>
+            <th>Time</th>
+            <th>Location</th>
+            <th>Virtual</th>
+            <th>Description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="eventsBody">
+          <tr><td colspan="8" class="loading">Loading events…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── PRESENTERS ── -->
+  <div id="subtab-presenters" class="subtab-panel hidden">
+    <div class="panel-toolbar">
+      <div class="view-toggle-group">
+        <button class="btn btn-sm view-toggle-btn active" id="presenterCardBtn">🪪 Cards</button>
+        <button class="btn btn-sm view-toggle-btn" id="presenterListBtn">📋 List</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <label style="font-size:12px;color:var(--text-muted);">Sort:</label>
+        <select id="presenterSortSelect" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--surface);">
+          <option value="presentation_month">Month</option>
+          <option value="name">Name</option>
+          <option value="organization">Organization</option>
+        </select>
+        <button class="btn btn-sm btn-ghost" id="presenterSortDirBtn" title="Toggle direction">↑</button>
+      </div>
+      <button class="btn btn-primary btn-sm" id="addPresenterBtn">+ Add Presenter</button>
+      <span class="record-count" id="presenterCount"></span>
+    </div>
+    <!-- Card view -->
+    <div id="presenterCardView" class="presenter-grid">
+      <div style="color:var(--text-muted);text-align:center;padding:40px;">Loading presenters…</div>
+    </div>
+    <!-- List view -->
+    <div id="presenterListView" class="table-wrapper" style="display:none;">
+      <table class="data-table" id="presenterTable">
+        <thead>
+          <tr>
+            <th style="width:36px;"></th>
+            <th>Name</th>
+            <th>Organization</th>
+            <th>Month</th>
+            <th>Description</th>
+            <th>Slides</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="presenterBody">
+          <tr><td colspan="7" class="loading">Loading presenters…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- ── MODAL ── -->
+<div id="modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modalTitle">Edit</h2>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="modalCancel">Cancel</button>
+      <button class="btn btn-primary" id="modalSave">Save</button>
+    </div>
+  </div>
+</div>

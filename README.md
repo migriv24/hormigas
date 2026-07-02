@@ -4,7 +4,12 @@
 
 The name is Spanish for "ant" — small, organized, and built for collaborative work.
 
-> **Status: v1.4.11 — active development.** The architecture is undergoing a major shift (see [The Antfarm](#the-antfarm)). The app is functional but the primary data backend (Supabase) is being replaced with a protocol-agnostic, local-first system.
+> **Status: v1.4.15 — active development.** The architecture is undergoing a major shift (see [The Antfarm](#the-antfarm) and `VOIDCORE_INTEGRATION.md`). The app is functional but the primary data backend (Supabase) is being replaced with a protocol-agnostic, local-first system.
+
+> **Agents & contributors: start at [`okf/index.md`](okf/index.md)** — the
+> Open Knowledge Format bundle describing Hormiga itself (concepts, UI/UX,
+> roadmap), with `status:` honesty on what is built vs planned. Validated with
+> [Void Core](https://github.com/migriv24/void-core)'s OKF engine.
 
 ---
 

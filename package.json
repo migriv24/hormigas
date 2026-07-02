@@ -1,6 +1,6 @@
 {
   "name": "hormiga",
-  "version": "1.4.16",
+  "version": "1.4.17",
   "description": "Newsletter builder and data manager for community organizations",
   "main": "electron/main.js",
   "author": "Miguel Rivas",

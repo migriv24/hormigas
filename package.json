@@ -33,6 +33,7 @@
     },
     "files": [
       "electron/**/*",
+      "!electron/app_secret.local.js",
       "assets/icons/icon.png",
       "package.json"
     ],

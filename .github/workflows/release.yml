@@ -16,7 +16,22 @@ permissions:
   contents: write
 
 jobs:
+  # Pre-create ONE draft release for the tag. Without this, the three platform
+  # jobs race to create it and the assets split across duplicate drafts.
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --repo "${{ github.repository }}" \
+            --title "${{ github.ref_name }}" \
+            --draft || echo "release already exists"
+
   release:
+    needs: create-release
     strategy:
       fail-fast: false
       matrix:
@@ -78,3 +93,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx electron-builder --${{ matrix.platform }} --publish always
+
+  # Flip the draft to a published release once every platform has uploaded —
+  # this is what makes the auto-updater see the new version.
+  publish-release:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit "${{ github.ref_name }}" \
+            --repo "${{ github.repository }}" \
+            --draft=false

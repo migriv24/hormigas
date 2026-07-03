@@ -3,6 +3,17 @@
 Dated history of the project and this bundle. Newest first. The forward-looking
 counterpart is [roadmap.md](/roadmap.md).
 
+## 2026-07-03 — Phase 1 packaging: Void Core ships in the installer
+- v1.4.17 exposed the gap: the packaged app's Void Console asked users to
+  `pip install` — never acceptable in an installed app. Fixed by **vendoring**:
+  `scripts/vendor_voidcore.py` copies Void Core's runtime (python layers +
+  `libvoidcore.dll`) into `vendor/voidcore/`, preserving the repo layout the
+  package resolves against; the engine falls back to it when the editable
+  install is absent (always, in a frozen build).
+- `void_state.json` now persists to the Electron data dir
+  (`HORMIGA_DATA_DIR`) in packaged builds — never the ephemeral `_MEIPASS`.
+- Verified against the real frozen `hormiga-server.exe` before release.
+
 ## 2026-07-02 — Void Core Phase 1: the dispatcher spine
 - `hormiga_core/` added: the Void Core adapter. `engine.py` (single manager +
   Dispatcher seam + state persistence), `glyphs.py` (14 section glyphs),

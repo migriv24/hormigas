@@ -14,12 +14,14 @@ When something ships it moves to [log.md](/log.md) and out of here.
 Resume the paused Supabase project, `pg_dump` everything, land the data locally.
 Prerequisite to every phase below.
 
-# Phase 1 — Embed the Void Core engine *(mostly done, 2026-07-02)*
+# Phase 1 — Embed the Void Core engine *(done, 2026-07-03)*
 Done: `hormiga_core/` adapter, the engine + Dispatcher seam, the
 [CLI](/concepts/cli.md) and Void Console (read + mutation verbs, `effect query`
-over live data). **Remaining slice:** bundle `voidcore` + `libvoidcore.dll` into
-the PyInstaller build so the console works in packaged releases, not just dev
-(see `hormiga.spec` note).
+over live data), and packaged-build bundling — Void Core's runtime + native lib
+ship vendored inside the installer (`scripts/vendor_voidcore.py` →
+`vendor/voidcore/`). Windows installers have a working console; mac/linux
+degrade gracefully until their native libs are built and vendored (the
+remaining sliver).
 
 # Phase 2 — Local-first holidays (the [Antfarm](/concepts/antfarm.md) becomes real)
 MeshDB as the primary data holiday + snapshot fallback

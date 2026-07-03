@@ -12,8 +12,10 @@ timestamp: 2026-07-02T00:00:00Z
 > (`POST /api/dev/cli`) and the terminal (`python -m hormiga_core.cli`) — both over
 > the same [engine](/concepts/voidcore-convergence.md), state file, and holidays.
 > Read verbs, rune/mantle mutation, tagging, undo/redo, `effect query <holiday>`,
-> and Voidscript all work. Remaining: newsletter render/save glyphs (Phase 3),
-> full UI-action → verb conversion (Phase 4), packaged-build bundling.
+> and Voidscript all work. Packaged builds ship the engine vendored
+> (`vendor/voidcore/`, Windows native lib; mac/linux degrade gracefully until
+> their libs are vendored). Remaining: newsletter render/save glyphs (Phase 3),
+> full UI-action → verb conversion (Phase 4).
 
 The founding requirement of the whole [convergence](/concepts/voidcore-convergence.md):
 **an AI agent should interact with Hormiga the way a human uses the UI** — all UI

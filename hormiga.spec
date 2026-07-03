@@ -21,6 +21,11 @@ a = Analysis(
         ('schemas',               'schemas'),
         ('services',              'services'),
         ('hormiga_core',          'hormiga_core'),
+        # Void Core runtime, vendored by scripts/vendor_voidcore.py (python
+        # sources + libvoidcore native lib, laid out like the VoidCore repo).
+        # hormiga_core.engine adds this to sys.path when the editable install
+        # isn't present — which is always the case in a frozen build.
+        ('vendor/voidcore',       'vendor/voidcore'),
     ],
     hiddenimports=[
         # SQLAlchemy PostgreSQL dialect
@@ -55,15 +60,10 @@ a = Analysis(
         'hormiga_core',
         'hormiga_core.engine',
     ],
-    # NOTE (Void Core packaging — remaining Phase-1 step): the `voidcore` package
-    # is currently an editable install pointing at ../VoidCore and loads its
-    # binding/holidays by absolute path, plus it needs libvoidcore.dll at runtime.
-    # In a frozen build without it, the engine degrades gracefully (the Void
-    # Console reports "engine unavailable — pip install -e ../VoidCore"). To make
-    # the console work in packaged builds, vendor VoidCore's runtime files
-    # (voidcore/, bindings/, holidays/, scry/, temper/, reduce/) + the built
-    # libvoidcore.dll into this bundle preserving that layout, then verify against
-    # the frozen exe. Tracked in VOIDCORE_INTEGRATION.md §4 Phase 1.
+    # Void Core ships vendored (vendor/voidcore above): python runtime + the
+    # native lib built on this machine. Platforms without a built native lib
+    # in the vendor dir degrade gracefully (console reports engine unavailable).
+    # After updating VoidCore, re-run: python scripts/vendor_voidcore.py
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

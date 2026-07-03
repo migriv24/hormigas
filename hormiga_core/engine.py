@@ -17,6 +17,8 @@ manager instance, so dispatch is serialized behind a lock.
 from __future__ import annotations
 
 import json
+import os
+import sys
 import threading
 from pathlib import Path
 from typing import Any, Callable, Optional
@@ -26,9 +28,40 @@ from core.logger import get_logger
 logger = get_logger("voidcore")
 
 _BASE_DIR = Path(__file__).resolve().parent.parent
-STATE_FILE = _BASE_DIR / "data" / "void_state.json"
+
+
+def _state_file() -> Path:
+    """Where the state document persists. Packaged app: the Electron-managed
+    data dir (HORMIGA_DATA_DIR) — never _MEIPASS, which is wiped per run.
+    Dev checkout: data/void_state.json (gitignored)."""
+    data_dir = os.environ.get("HORMIGA_DATA_DIR")
+    if data_dir:
+        return Path(data_dir) / "void_state.json"
+    return _BASE_DIR / "data" / "void_state.json"
+
+
+STATE_FILE = _state_file()
 
 DEFAULT_MANTLE = "newsletter"
+
+
+def _import_voidcore():
+    """Import the voidcore package: the editable dev install if present,
+    else the runtime vendored into the app bundle (vendor/voidcore — see
+    scripts/vendor_voidcore.py). In a frozen build the bundle root is
+    sys._MEIPASS; in a checkout it is the repo root."""
+    try:
+        import voidcore
+        return voidcore
+    except ImportError:
+        bundle_root = Path(getattr(sys, "_MEIPASS", _BASE_DIR))
+        vendor = bundle_root / "vendor" / "voidcore"
+        if vendor.is_dir():
+            sys.path.insert(0, str(vendor))
+            import voidcore
+            logger.info(f"voidcore loaded from vendored runtime: {vendor}")
+            return voidcore
+        raise
 
 
 class HormigaEngine:
@@ -37,7 +70,7 @@ class HormigaEngine:
         self.error: Optional[str] = None
         self._lock = threading.Lock()
         try:
-            import voidcore
+            voidcore = _import_voidcore()
             from . import glyphs
             from .effects import make_effect_handler
             from .holidays import build_registry
@@ -86,10 +119,14 @@ class HormigaEngine:
     def dispatch(self, command: str) -> dict:
         """Run one dispatcher command; returns the SPEC §6 {ok, lines, data}."""
         if not self.available:
-            return {"ok": False, "data": None, "lines": [
-                "Void Core engine unavailable: " + (self.error or "unknown"),
-                "Install it with:  pip install -e ../VoidCore  (and build the C core)",
-            ]}
+            lines = [
+                "The Void Core engine could not be loaded on this platform/build.",
+                f"Reason: {self.error or 'unknown'}",
+            ]
+            if not getattr(sys, "frozen", False):
+                lines.append("Dev checkout fix: pip install -e ../VoidCore "
+                             "(or run scripts/vendor_voidcore.py)")
+            return {"ok": False, "data": None, "lines": lines}
         with self._lock:
             result = self.dispatcher.dispatch(command)
             try:

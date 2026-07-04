@@ -15,12 +15,18 @@ a rune's own name counts as a tag.
 Failure honesty: a holiday whose backend is unreachable (the paused Supabase)
 answers describe() with status "offline" and raises a clean error from query()
 — the app must never die because a node is down (the Antfarm principle).
+
+Tag matching is delegated to Void Core's `tag_match` FFI (the one C
+implementation of the SPEC §5 grammar, added in 0.2.0) so a holiday's
+`query(expr)` means exactly what the core's `ls --tag expr` means over runes —
+no host-side reimplementation to drift.
 """
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any, Callable, List
 
-from . import tagexpr
+# match(expr, tags) -> bool : the Void Core tag_match FFI, injected by the engine.
+Matcher = Callable[[str, List[str]], bool]
 
 
 class Holiday:
@@ -31,24 +37,26 @@ class Holiday:
     _id_field = "id"
     _tag_fields: tuple[str, ...] = ("name",)   # identity fields that count as tags
 
+    def __init__(self, match: Matcher):
+        self._match = match
+
     def _fetch(self) -> list[dict]:            # pragma: no cover - abstract
         raise NotImplementedError
 
-    def _entity_tags(self, e: dict) -> set[str]:
-        tags = {str(t) for t in (e.get("tags") or [])}
+    def _entity_tags(self, e: dict) -> list[str]:
+        tags = [str(t) for t in (e.get("tags") or [])]
         for f in self._tag_fields:
             v = e.get(f)
-            if v not in (None, ""):
-                tags.add(str(v))
+            if v not in (None, "") and str(v) not in tags:
+                tags.append(str(v))
         return tags
 
     def query(self, expr: str = "") -> list[dict]:
-        pred = tagexpr.compile_expr(expr)
-        return [e for e in self._fetch() if pred(self._entity_tags(e))]
+        return [e for e in self._fetch() if self._match(expr, self._entity_tags(e))]
 
     def get(self, ref: str) -> dict | None:
         for e in self._fetch():
-            if str(e.get(self._id_field)) == str(ref) or ref in self._entity_tags(e):
+            if str(e.get(self._id_field)) == str(ref) or str(ref) in self._entity_tags(e):
                 return e
         return None
 
@@ -68,8 +76,9 @@ class Holiday:
 class _CallableHoliday(Holiday):
     """A holiday over a fetch function (the thin wrap for existing stores)."""
 
-    def __init__(self, name: str, fetch: Callable[[], list[dict]],
+    def __init__(self, match: Matcher, name: str, fetch: Callable[[], list[dict]],
                  id_field: str = "id", tag_fields: tuple[str, ...] = ("name",)):
+        super().__init__(match)
         self.name = name
         self._fetch_fn = fetch
         self._id_field = id_field
@@ -79,9 +88,9 @@ class _CallableHoliday(Holiday):
         return self._fetch_fn()
 
 
-def build_registry(get_repo: Callable[[], Any]) -> dict[str, Holiday]:
+def build_registry(get_repo: Callable[[], Any], match: Matcher) -> dict[str, Holiday]:
     """The holiday registry over Hormiga's existing stores. `get_repo` is
-    app.py's lazy repository accessor (contacts/events live behind it)."""
+    app.py's lazy repository accessor; `match` is Void Core's tag_match FFI."""
     import data.contacts_meta as contacts_meta
     import data.events_meta as events_meta
     import data.image_store as image_store
@@ -108,12 +117,12 @@ def build_registry(get_repo: Callable[[], Any]) -> dict[str, Holiday]:
         return out
 
     return {
-        "contacts": _CallableHoliday("contacts", fetch_contacts,
+        "contacts": _CallableHoliday(match, "contacts", fetch_contacts,
                                      id_field="row_index", tag_fields=("name",)),
-        "events":   _CallableHoliday("events", fetch_events,
+        "events":   _CallableHoliday(match, "events", fetch_events,
                                      id_field="row_index", tag_fields=("name", "title")),
-        "images":   _CallableHoliday("images", image_store.get_images,
+        "images":   _CallableHoliday(match, "images", image_store.get_images,
                                      id_field="id", tag_fields=("name", "filename")),
-        "jobs":     _CallableHoliday("jobs", jobs_store.get_jobs,
+        "jobs":     _CallableHoliday(match, "jobs", jobs_store.get_jobs,
                                      id_field="id", tag_fields=("title", "organization")),
     }

@@ -79,7 +79,9 @@ class HormigaEngine:
             self.vc = voidcore.VoidCore(state=state)
             self.version = self.vc.version
             n = glyphs.register_all(self.vc)
-            self.holidays = build_registry(get_repo)
+            # Filter holiday entities through Void Core's own tag_match FFI (0.2.0),
+            # so `effect query events "x"` == `ls --tag x` — one grammar, no host copy.
+            self.holidays = build_registry(get_repo, self.vc.tag_match)
             self.vc.set_effect_handler(
                 make_effect_handler(self.holidays, self._persist_state, logger))
             self.dispatcher = voidcore.Dispatcher(self.vc)

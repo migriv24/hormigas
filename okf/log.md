@@ -3,6 +3,18 @@
 Dated history of the project and this bundle. Newest first. The forward-looking
 counterpart is [roadmap.md](/roadmap.md).
 
+## 2026-07-03 — Void Core 0.2.0: shared tag grammar + POSIX verbs
+- Upgraded to Void Core 0.2.0 (vendored). Void Core acted on the Hormiga handoff:
+  a `vc_tag_match` FFI (the one C implementation of the SPEC §5 tag grammar), a
+  POSIX command surface (`cd`/`pwd`/`rm`/`mv`/`cp`/`mkdir`/`grep`/`man`, root-`ls`
+  lists mantles), the `--json` capture bug fixed, and CI that publishes native
+  libs for all three platforms.
+- Hormiga now filters [holiday](/concepts/antfarm.md) entities through
+  `tag_match` — deleted the host-side grammar copy (`hormiga_core/tagexpr.py`),
+  so `effect query events "june AND healthcare"` provably means the same as the
+  core's `ls --tag`. The [CLI](/concepts/cli.md) inherits the POSIX verbs for
+  free (agents can use terminal muscle memory).
+
 ## 2026-07-03 — Phase 1 packaging: Void Core ships in the installer
 - v1.4.17 exposed the gap: the packaged app's Void Console asked users to
   `pip install` — never acceptable in an installed app. Fixed by **vendoring**:

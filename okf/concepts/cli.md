@@ -23,6 +23,11 @@ actions possible in the CLI, all CLI actions possible in the UI. This is achieve
 structurally, not by parallel implementation: UI and CLI are two callers of the
 same Void Core dispatcher, so parity cannot drift.
 
+Since Void Core 0.2.0 the verb surface is **POSIX-flavored** — `cd` (use a
+mantle), `pwd`, `rm`/`mv`/`cp` (rune remove/rename/dup), `mkdir` (new mantle),
+`grep` (find), `ls` at root lists mantles — so an agent leans on terminal muscle
+memory instead of learning a bespoke vocabulary.
+
 Two workload families, both tag-driven ([tags](/concepts/tags.md)):
 
 1. **Ingestion + tagging** (the original want): add events, upload images, and

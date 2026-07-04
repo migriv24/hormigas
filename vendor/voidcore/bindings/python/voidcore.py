@@ -73,6 +73,8 @@ class VoidCore:
         L.vc_free_str.argtypes = [ctypes.c_void_p]
         L.vc_destroy.argtypes = [ctypes.c_void_p]
         L.vc_version.restype = ctypes.c_char_p
+        L.vc_tag_match.restype = ctypes.c_int
+        L.vc_tag_match.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 
     def _take(self, ptr: int) -> str:
         """Read a heap string returned by the lib, then free it."""
@@ -95,6 +97,19 @@ class VoidCore:
     def export_state(self) -> dict[str, Any]:
         ptr = self._lib.vc_export_state(self._m)
         return json.loads(self._take(ptr))
+
+    def tag_match(self, expr: str, tags: list[str]) -> bool:
+        """Evaluate a SPEC §5 tag/filter expression against a bag of tags.
+
+        The one C implementation of the filter grammar, exposed so hosts filtering
+        holiday/external entities (`effect query …`) never reimplement it. Include
+        the entity's name in `tags` to get name-as-tag matching. Stateless (does
+        not touch this manager's state) and thread-safe."""
+        r = self._lib.vc_tag_match(expr.encode("utf-8"),
+                                   json.dumps(list(tags)).encode("utf-8"))
+        if r < 0:
+            raise ValueError(f"vc_tag_match: malformed input (expr={expr!r})")
+        return bool(r)
 
     def register_glyph(self, glyph: dict) -> bool:
         """Declare a rune type (host app config; not part of exported state)."""
@@ -223,6 +238,19 @@ if __name__ == "__main__":
     axes = vc.dispatch("axes")["data"]
     assert "chapter:2" in axes["when"] and "ralsei" in axes["free"]
     print("tags / filter grammar / @-target / axes: OK")
+
+    # the stateless tag-expression FFI (one grammar impl for hosts, SPEC §5)
+    assert vc.tag_match("month:june AND healthcare", ["month:june", "healthcare"])
+    assert not vc.tag_match("month:june AND NOT healthcare", ["month:june", "healthcare"])
+    assert vc.tag_match("(a || b) && !c", ["b"])
+    assert vc.tag_match("", ["anything"])  # empty expression matches all
+    assert vc.tag_match("alpha", ["alpha"])  # name-as-tag: caller includes the name
+    try:
+        vc.tag_match("x", None)  # type: ignore[arg-type]
+        raise AssertionError("expected ValueError")
+    except (ValueError, TypeError):
+        pass
+    print("vc_tag_match FFI: OK")
 
     # lifecycle dirty-tracking (SPEC §7)
     assert vc.dispatch("status --dirty")["ok"] is True  # unsaved edits exist
